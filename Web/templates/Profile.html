@@ -1,0 +1,193 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %}Profile {% endblock %}
+{% block linkTitle %}Profile {% endblock %}
+{% block backButton %}
+    <a class="cardStyling" role="button" onclick="goBack()" href="#"><img src="{% static 'resources/images/back.png' %}"
+                                                                          alt="Back" width="60"
+                                                                          height="30"></a> {% endblock %}
+{% block body %}
+    <style>
+        @media screen {
+            div.footer {
+                display: none;
+            }
+        }
+
+        @media print {
+            div.footer {
+                position: fixed;
+                bottom: 0;
+            }
+        }
+
+        @media screen {
+            div.header {
+                display: none;
+            }
+        }
+
+        @media print {
+            div.header {
+                position: fixed;
+                top: 0;
+            }
+        }
+    </style>
+    <form class="needs-validation" method="POST" action="" novalidate>
+        {% csrf_token %}
+        <div class="card-block">
+            <div class="form-group row">
+                {% if data %}
+                    {% for i in data %}
+                        <div class="col-md-5">
+                            <label class="required"><strong>First Owner Name</strong></label>
+                            <input type="text" class="form-control style" name="first_owner" value="{{ i.First_Owner }}"
+                                   required>
+                        </div>
+                        <div class="col-md-5">
+                            <label><strong>Second Owner Name</strong></label>
+                            <input type="text" class="form-control style" name="second_owner"
+                                   value="{{ i.Second_Owner }}">
+                        </div>
+                        <div class="col-md-5 mt-3">
+                            <label class="required"><strong>First Mobile Number</strong></label>
+                            <input type="text" class="form-control style" name="first_mob_no"
+                                   value="{{ i.First_Owner_Mobile }}" required>
+                        </div>
+                        <div class="col-md-5 mt-3">
+                            <label><strong>Second Mobile Number</strong></label>
+                            <input type="text" class="form-control style" name="second_mob_no"
+                                   value="{{ i.Secon_Owner_Mobile }}">
+                        </div>
+                        <div class="col-md-5 mt-3">
+                            <label class="required"><strong>Pump Name</strong></label>
+                            <input type="text" class="form-control style" name="pump_name" value="{{ i.Pump_Name }}"
+                                   required>
+                        </div>
+                        <div class="col-md-5 mt-3">
+                            <label><strong>Email Address</strong></label>
+                            <input type="email" class="form-control style" name="email" value="{{ i.Owner_Email }}">
+                        </div>
+                        <div class="col-md-5 mt-3">
+                            <label class="required"><strong>Registration Number</strong></label>
+                            <input type="text" class="form-control style" name="reg_no" value="{{ i.Pump_Reg_No }}"
+                                   required>
+                        </div>
+                        <div class="col-md-5 mt-3">
+                            <label class="required"><strong>Address</strong></label>
+                            <input type="text" class="form-control style" name="address" value="{{ i.Pump_Address }}"
+                                   required>
+                        </div>
+                    {% endfor %}
+                    <div class="row justify-content-center col-10 mt-5">
+                        <button type="submit" class="btn btn-round btn-success cardStyling">Update Settings</button>
+                        <button type="button" class="btn btn-round btn-warning ml-3 cardStyling" data-target="#add"
+                                data-toggle="modal" data-dismiss="modal">View Transictions
+                        </button>
+                        <button type="button" class="btn btn-round btn-info text-dark ml-3 cardStyling"
+                                data-target="#statistics" data-toggle="modal" data-dismiss="modal">View Login Statistics
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="add" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="printableArea">
+                    <img src="{% static 'resources/images/pakistan-flag.jpg' %}"
+                         style="position: absolute;width: 100%;height: 99%;opacity: 0.1;" alt="Model_bg">
+                    <div class="header">
+                        <img style="width: 100%" src="{% static 'resources/images/Header.png' %}" alt="Header">
+                        <p class="text-dark float-left ml-3"><b>Date: <span class="JDate"></span></b></p>
+                        <p class="text-dark float-right mr-3"><b>Time: <span class="JTime"></span></b></p>
+                    </div>
+                    <h5 class="modal-title text-center mb-3 mt-2">{% for name in data %}
+                        <b>{{ name.Pump_Name }}</b>{% endfor %}
+                        <br>Summary Of All Transictions</h5>
+                    <hr>
+                    <table class="table table-hover">
+                        <tr>
+                            <th class="text-center">S.No</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Cash In</th>
+                            <th class="text-center">Reason</th>
+                            <th class="text-center">Cash Out</th>
+                            <th class="text-center">Reason</th>
+                        </tr>
+                        {% for j in Transictions %}
+                            {% if j.Cashed_In != 0 or j.Cashed_Out != 0 %}
+                                <tr>
+                                    <th class="text-center">{{ forloop.counter }}</th>
+                                    <td class="text-center">{{ j.Date }}</td>
+                                    <td class="text-center">{{ j.Cashed_In }}</td>
+                                    <td class="text-center">{{ j.Cashed_In_Reason }}</td>
+                                    <td class="text-center">{{ j.Cashed_Out }}</td>
+                                    <td class="text-center">{{ j.Cashed_Out_Reason }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                    <div class="footer text-center text-warning" style="background-color:black;">Developed
+                        & Designed By Fawad Copyright@ <span id="year"></span> All Rights Reserved. <span
+                                class="icofont-brand-whatsapp"> +923418357982</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-round icofont-close-circled cardStyling"
+                            data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-success btn-round icofont-printer cardStyling" id="btn"
+                            onclick="printSlip('printableArea')"> Print Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="statistics" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="printableArea">
+                    <img src="{% static 'resources/images/pakistan-flag.jpg' %}"
+                         style="position: absolute;width: 100%;height: 99%;opacity: 0.1;" alt="Model_bg">
+                    <h5 class="modal-title text-center mb-3 mt-2">{% for name in data %}
+                        <b>{{ name.Pump_Name }}</b>{% endfor %}
+                        <br>Current Login Statistics</h5>
+                    <table class="table table-hover table-sm">
+                        <tr>
+                            <th class="text-center">S.No</th>
+                            <th class="text-center">User Name</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Time</th>
+                        </tr>
+                        {% for j in loginStatistics %}
+                            <tr>
+                                <th class="text-center">{{ forloop.counter }}</th>
+                                <td class="text-center">{{ j.Admin }}</td>
+                                <td class="text-center">{{ j.Date|date:"d/M/Y" }}</td>
+                                <td class="text-center">{{ j.Time }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-round icofont-close-circled cardStyling"
+                            data-dismiss="modal"> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function printSlip(area) {
+            document.body.innerHTML = document.getElementById(area).innerHTML;
+            window.print();
+            location.reload();
+        }
+    </script>
+{% endblock body %}

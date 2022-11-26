@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome Message</title>
+    <style>
+        table {
+            font-family: "Times New Roman", serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #7519d9;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .footer {
+            margin-top: 350px;
+            text-align: center;
+            color: yellow;
+            background-color: black;
+            border: 1px solid red;
+            border-radius: 14px;
+        }
+    </style>
+</head>
+<body style="font-family: 'Times New Roman', serif;">
+<h3 style="text-align: center">Welcome To PFSMS</h3>
+<h4>Dear {{ data.firstOwner }}, Strongly Welcome To Professional Fuel Staion Manangement
+    System Thank You For Chossing Me, I Hope You Will have Greate Experience Here. <br><br>
+    Major Account Detail Are Below.. </h4>
+<table>
+    <tr>
+        <th>Owner Name</th>
+        <th>Pump Name</th>
+        <th>Address</th>
+        <th>User Name</th>
+        <th>Password</th>
+    </tr>
+    <tr>
+        <td>{{ data.firstOwner }}</td>
+        <td>{{ data.pumpName }}</td>
+        <td>{{ data.pumpAddress }}</td>
+        <td>{{ data.username }}</td>
+        <td>{{ data.password }}</td>
+    </tr>
+</table>
+<div class="footer">&copy; {% now 'Y' %} All Rights Reserved. Developed By
+    <a href="https://fb.com/fawadkhan546" target="blank" style="color: white">Fawad</a>
+</div>
+</body>
+</html>

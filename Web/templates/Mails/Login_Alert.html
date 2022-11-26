@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Alert</title>
+    <style>
+        table {
+            font-family: "Times New Roman", serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #7519d9;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .footer {
+            margin-top: 350px;
+            text-align: center;
+            color: yellow;
+            background-color: black;
+            border: 1px solid red;
+            border-radius: 14px;
+        }
+    </style>
+</head>
+<body style="font-family: 'Times New Roman', serif;">
+<h1 style="text-align: center">Login Alert !</h1>
+{% for i in data %}
+    <h4>Attention Please Dear {{ i.First_Owner|title }}, Assalamualaikum I Have Noticed A Login
+        Activity In PFSMS Details Are Below..</h4>
+{% endfor %}
+<table>
+    <tr>
+        <th>Login Person</th>
+        <th>Pump</th>
+        <th>Location</th>
+        <th>Time</th>
+        <th>Date</th>
+    </tr>
+    {% for i in data %}
+        <tr>
+            <td>{{ user|title }}</td>
+            <td>{{ i.Pump_Name|title }}</td>
+            <td>{{ i.Pump_Address|title }}</td>
+            <td>{% now 'h:i:s A' %}</td>
+            <td>{% now 'D d/M/y' %}</td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="footer">&copy; {% now 'Y' %} All Rights Reserved. Developed By
+    <a href="https://fb.com/fawadkhan546" target="blank" style="color: white">Fawad</a>
+</div>
+</body>
+</html>

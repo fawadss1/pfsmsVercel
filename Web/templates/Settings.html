@@ -1,0 +1,120 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %}Settings {% endblock %}
+{% block linkTitle %}Settings {% endblock %}
+{% block backButton %}
+    <a class="cardStyling" role="button" onclick="goBack()" href="#"><img src="{% static 'resources/images/back.png' %}"
+                                                                          alt="Back" width="60"
+                                                                          height="30"></a> {% endblock %}
+{% block body %}
+    <form class="needs-validation" method="POST" action="" novalidate>
+        {% csrf_token %}
+        <div class="card-block">
+            <div class="form-group row">
+                {% for i in fuelData %}
+                    <div class="col-md-5 mt-2">
+                        <label class="required" for="petrol_price"><strong>Petrol Price</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-secondary style">Previous Price: <b>{{ i.Petrol_Price }}</b></span>
+                            <input type="number" class="form-control style" onwheel="return false" step=any
+                                   name="petrol_price" id="petrol_price" value="{{ i.Petrol_Price }}" required>
+                        </div>
+                        <input type="number" name="id" value="{{ i.id }}" hidden>
+                    </div>
+                    <div class="col-md-5 mt-2">
+                        <label class="required" for="diesel_price"><strong>Diesel Price</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-secondary style">Previous Price: <b>{{ i.Diesel_Price }}</b></span>
+                            <input type="number" class="form-control style" onwheel="return false" step=any
+                                   name="diesel_price" id="diesel_price" value="{{ i.Diesel_Price }}" required>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for cash in cashData %}
+                    <div class="col-md-10 mt-3">
+                        <label class="required"><strong>Current Month Balance</strong></label>
+                        <input type="number" class="form-control style" name="total_balance"
+                               value="{{ cash.Total_Month_Rs|floatformat:2 }}" readonly>
+                    </div>
+                {% endfor %}
+                <div class="row justify-content-center col-10 mt-5">
+                    <button type="submit" name="changeSetting" class="btn btn-round btn-outline-success cardStyling">
+                        Update Settings
+                    </button>
+                    <button type="button" class="btn btn-round btn-outline-danger cardStyling ml-5"
+                            data-target="#changePass" data-toggle="modal">Change Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form class="needs-validation" method="POST" action="" novalidate>
+        {% csrf_token %}
+        <div class="modal fade" id="changePass" data-backdrop="static" data-keyboard="true" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Change Account Password</h3>
+                    </div>
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <label class="required"><strong>Old Password</strong></label>
+                                        <input type="password" class="form-control style" name="oldpass" id="oldpass"
+                                               placeholder="Enter Your Old Password" required>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="mt-4">
+                                        <label class="required"><strong>New Password</strong></label>
+                                        <input type="password" class="form-control style" id="password"
+                                               placeholder="Enter Your New Password" data-toggle="password" required>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mt-5 ml-3">
+                                        <label class="required"><strong>Confirm Password</strong></label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control style" id="confirm_password"
+                                                   name="newPass" placeholder="Enter Your New Password Again"
+                                                   data-toggle="password" required><span
+                                                class="input-group-addon bg-light text-dark style"><i id="togglePass"
+                                                                                                      class="icofont-eye-blocked"></i></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-round icofont-close-circled"
+                                data-dismiss="modal"> Cancel
+                        </button>
+                        <button type="submit" name="changePass"
+                                class="btn btn-success btn-round icofont-refresh"> Change Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src={% static '/resources/js/password_Check.js' %}></script>
+    <script>
+        $('#confirm_password').keyup(function () {
+            const pass = $('#password');
+            const confirmPass = $(this).val();
+            if ($('#password').val() != confirmPass) {
+                pass.css("border", "2px solid red");
+                $(this).css("border", "2px solid red");
+            } else {
+                pass.css("border", "2px solid green");
+                $(this).css("border", "2px solid green");
+            }
+        });
+    </script>
+{% endblock body %}

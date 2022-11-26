@@ -1,0 +1,183 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %} Point Of Sale {% endblock %}
+{% block linkTitle %} Point Of Sale {% endblock %}
+{% block body %}
+    <style>
+        .borderStyle {
+            border-top: 2px dashed #000000;
+            border-bottom: 2px dashed #000000;
+        }
+
+        @media screen {
+            div.header {
+                display: none;
+            }
+
+            div.footer {
+                display: none;
+            }
+
+            .doubleLine {
+                display: none;
+            }
+        }
+
+        @media print {
+            div.header {
+                position: center;
+                top: 0;
+            }
+        }
+
+        div.footer {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+    {% for i in fuelPrices %}
+        <input class="petrol_price" value="{{ i.Petrol_Price }}" hidden>
+        <input class="diesel_price" value="{{ i.Diesel_Price }}" hidden>
+    {% endfor %}
+    <div class="row">
+        <div class="col-md-10">
+            <p style="font-size: 12px"><b>Note: </b>if You Want To Register New Customer Please <a
+                    href="{% url "Add Debtor" %}"><small class="text-primary"><u>Click Here</u></small></a>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <label class="required" for="customerName"><strong>Enter Customer Name</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon bg-dark style icofont-user"></span>
+                <input type="text" class="form-control style" id="customerName"
+                       onkeydown="return /[a-z ]/i.test(event.key)">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <label class="required" for="selectedCustomer"><strong> <span class="text-danger">OR | </span> Select
+                Customer</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon bg-dark icofont-user style"></span>
+                <select class="form-control style" style="height: 55px;" id="selectedCustomer" required>
+                    <option class="text-danger" value="">Select Customer</option>
+                    {% if debtors %}
+                        {% for i in debtors %}
+                            <option value="{{ i.Name }}">{{ i.Name }} S/O {{ i.Father_Name }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option class="text-danger" value="" disabled>Customers Not Registered</option>
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="required" for="fuel"><strong>Select Fuel</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon bg-dark icofont-energy-oil style"></span>
+                <select class="form-control style" style="height: 55px;" name="fuel" id="fuel" required>
+                    <option value="">Select Fuel First</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label class="required" for="fuelRs"><strong>Sold Fuel Price</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon bg-dark style icofont-money"></span>
+                <input type="number" class="form-control style" id="fuelRs" required>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label class="required" for="fuelltrs"><strong>OR Sold Fuel Litters</strong></label>
+            <div class="input-group">
+                <span class="input-group-addon bg-dark style icofont-beaker"></span>
+                <input type="number" class="form-control style" id="fuelltrs" required>
+            </div>
+        </div>
+    </div>
+    <div class="ml-3 mr-3 mt-3" id="printSummary">
+        {% for i in pumpInfo %}
+            <div class="header">
+                <h1 class="text-center font-weight-bold text-danger">{{ i.Pump_Name }}</h1>
+                <h4 class="text-center font-weight-bold">{{ i.Pump_Address }}</h4>
+                <h5 class="text-center font-weight-bold">
+                    <span>{{ i.First_Owner }} </span>
+                    <span class="ml-1">({{ i.First_Owner_Mobile }})</span>
+                    <span class="ml-5">{{ i.Second_Owner }} </span>
+                    <span class="ml-1">({{ i.Secon_Owner_Mobile }})</span>
+                </h5>
+                <p>
+                    <i class="ml-3 float-left font-weight-bold">Date: <span class="JDate"></span></i>
+                    <i class="mr-3 float-right font-weight-bold">Receipt #: PFSMS-<span id="time"></span></i>
+                </p>
+            </div>
+        {% endfor %}
+        <p class="text-center">
+            <script>
+                for (let line = "*"; line.length <= 20; line += "*")
+                    document.write(line);
+            </script>
+        </p>
+        <div style="clear: both">
+            <h4 class="ml-3 float-left">Official Receipt</h4>
+            <h4 class="mr-3 float-right">Customer Name: <span><b class="text-underline" id="cName"></b></span></h4>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="text-center">Fuel</th>
+                <th class="text-center">Volume.(Ltrs)</th>
+                <th class="text-center">Unit Price.(Rs)</th>
+                <th class="text-center">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th class="text-center">Petrol</th>
+                <td class="text-center" id="ptrlLtrSold">0</td>
+                <td class="text-center" id="petrol_price">0</td>
+                <td class="text-center" id="ptrlSoldRs">0</td>
+                <input type="hidden" id="ptrlSoldRsVal" value="0"/>
+            </tr>
+            <tr>
+                <th class="text-center">Diesel</th>
+                <td class="text-center" id="dslLtrSold">0</td>
+                <td class="text-center" id="diesel_price">0</td>
+                <td class="text-center" id="dslSoldRs">0</td>
+                <input type="hidden" id="dslSoldRsVal" value="0"/>
+            </tr>
+            <tr>
+                <th class="text-center">Total Rs</th>
+                <td></td>
+                <td></td>
+                <th class="text-center" id="totalRs">0</th>
+            </tr>
+            </tbody>
+        </table>
+        <p class="text-center doubleLine">
+            <script>
+                for (let line = "="; line.length <= 20; line += "=")
+                    document.write(line);
+            </script>
+            <span class="mt-3 mb-3" style="font-size: 25px">Thanks For Visiting Us Always Welcome</span>
+            <script>
+                for (let line = "="; line.length <= 20; line += "=")
+                    document.write(line);
+            </script>
+        </p>
+        <div class="mb-4 footer text-center">
+            <svg id="barcode"></svg>
+        </div>
+        <div class="footer text-center text-warning" style="background-color:black;"> &copy; <span class="JYear"></span>
+            All Rights Reserved. Developed By Fawad <span class="icofont-brand-whatsapp"> +923418357982</span>
+        </div>
+    </div>
+    <button class="btn btn-success btn-round icofont-printer cardStyling mb-5" onclick="printSlip('printSummary')">
+        Print Out
+    </button>
+    <button class="btn btn-danger btn-round icofont-refresh cardStyling ml-5 mb-5" onclick="window.location.reload();">
+        Reset Values
+    </button>
+    <script type="text/javascript" src="{% static "/resources/js/posScripts.js" %}"></script>
+{% endblock body %}

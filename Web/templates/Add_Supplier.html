@@ -1,0 +1,74 @@
+{% extends 'Base.html' %}
+{% block title %}Add Supplier {% endblock %}
+{% block linkTitle %}Suppliers / Add Supplier {% endblock %}
+{% block body %}
+    <form class="needs-validation" method="POST" action="" novalidate>
+        {% csrf_token %}
+        <div class="card-block">
+            <div class="form-group row">
+                <div class="col-md-5 mt-3">
+                    <label class="required" for="supplier_name"><strong>Name</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-business-man-alt-1 style"></span>
+                        <input type="text" class="form-control style" name="supplier_name" id="supplier_name"
+                               placeholder="Enter Your Supplier Name" required>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <label for="email"><strong>Email</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-email style"></span>
+                        <input type="email" class="form-control style" name="email" id="email"
+                               placeholder="Enter Supplier Email Address">
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <label class="required" for="mob_no"><strong>Mobile No.</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-phone style"></span>
+                        <input type="text" class="form-control style" data-inputmask="'mask': '0399-99999999'"
+                               name="mob_no" id="mob_no" maxlength="12" required>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <label for="iban"><strong>Bank Account Number</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-credit-card style"></span>
+                        <input type="text" class="form-control style" name="iban" id="iban"
+                               placeholder="Enter Supplier Bank Account Number" required>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <label class="required" for="bank_name"><strong>Bank Name</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-bank style"></span>
+                        <input type="text" class="form-control style" name="bank_name" id="bank_name"
+                               placeholder="Enter Supplier Bank Name" required>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <label class="required" for="company_name"><strong>Company Name</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-industries style"></span>
+                        <input type="text" class="form-control style" name="company_name" id="company_name"
+                               placeholder="Enter Supplier Company Name" required>
+                    </div>
+                </div>
+                <div class="col-md-10 mt-3">
+                    <label class="required" for="res_address"><strong>Resident Address</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-ui-email style"></span>
+                        <input type="text" class="form-control style" name="res_address" id="res_address"
+                               placeholder="Enter Your Supplier Resident Address" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center col-10 mt-5">
+                    <button type="submit" class="btn btn-outline-success btn-round mb-4 cardStyling">Add Supplier</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(":input").inputmask();
+        </script>
+    </form>
+{% endblock %}

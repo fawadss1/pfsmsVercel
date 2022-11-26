@@ -1,0 +1,47 @@
+{% extends 'Base.html' %}
+{% block title %}View Employee {% endblock %}
+{% block linkTitle %}Employees / View Employee {% endblock %}
+{% block body %}
+    <div class="card-block">
+        <div class="form-group row">
+            {% if employee %}
+                <div class="text-center col-md-10">
+                    <h4 class="font-weight-bold">List of Registered Employees</h4>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Salary</th>
+                        <th>Role</th>
+                        <th>Address</th>
+                        <th>Date Of Join</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in employee %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ i.Name }}</td>
+                            <td>{{ i.Mobile }}</td>
+                            <td>{{ i.Salary }}</td>
+                            <td>{{ i.Role }}</td>
+                            <td>{{ i.Resident_Address }}</td>
+                            <td>{{ i.Date_of_Join|date:'d-M-Y' }}</td>
+                            <td><a class="btn btn-grd-danger btn-round btn-sm icofont-edit-alt cardStyling"
+                                   href="{% url 'Edit Employee' i.id %}" role="button"> Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        const d = new Date();
+        document.getElementById("MonthYear").innerHTML = d.getMonth() + 1 + "/" + d.getFullYear();
+    </script>
+{% endblock %}

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <title>{% block title %} {% endblock %} | FPSMS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="keywords" content="Fuel, Petrol, Pump, Station, Management, Software, Petrol Pump, Summaries, Charts">
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/jquery.mCustomScrollbar.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/icon/icofont/icofont.css" %}">
+    <script type="text/javascript" src="{% static "/resources/js/popper.js/chartsApi.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/toastr.min.css" %}">
+    <link rel="icon" type="image/icon" href="{% static "/resources/images/favicon.ico" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/style.css" %}">
+    <link href="{% static "/resources/css/google_fonts.css" %}" rel="stylesheet">
+    <!---CNIC Mobile control-->
+    <script type="text/javascript" src="{% static "/resources/js/jquery/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "/resources/js/jquery/jquery.inputmask.bundle.js" %}"></script>
+    <script type="text/javascript" src="{% static "/resources/js/JsBarcode.code128.min.js" %}"></script>
+
+    <!---end-->
+    <style>
+        ::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #303549;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(180deg, #ea0782, #3730f5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(180deg, #3730f5, #ea0782);
+        }
+
+        .modal-open .card-block, .modal-open .pcoded-navbar {
+            filter: blur(3px);
+        }
+
+        .style {
+            padding: 16px;
+            border: 2px solid #be85f2;
+            border-radius: 10px;
+        }
+
+        .style:focus {
+            border: 2px solid #be85f2;
+            box-shadow: 0 0 20px rgba(255, 100, 255, 0.9);
+        }
+
+        .required:after {
+            font-size: 18px;
+            content: "*";
+            color: red;
+        }
+
+        .cardStyling {
+            box-shadow: 0 12px 12px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        #togglePass:hover {
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="theme-loader">
+    <div class="ball-scale">
+        <div class='contain'>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="pcoded" class="pcoded">
+    <div class="pcoded-container navbar-wrapper">
+        <nav class="navbar header-navbar pcoded-header" style="background: #303549">
+            <div class="navbar-wrapper">
+                <div class="navbar-logo">
+                    <a class="mobile-menu" id="mobile-collapse" href="#">
+                        <i class="icofont-navigation-menu"></i>
+                    </a>
+                    <a href="/">
+                        <img src="{% static 'resources/images/logo.png' %}" alt="Logo">
+                    </a>
+                    <a class="mobile-options">
+                        <i class="icofont-hand-drawn-down"></i>
+                    </a>
+                </div>
+                <div class="navbar-container container-fluid">
+                    <ul class="nav-left">
+                        <li>
+                            <div class="sidebar_toggle"><a href="javascript:void(0)"><i
+                                    class="icofont-navigation-menu"></i></a></div>
+                        </li>
+                        <li>
+                            <a class="text-light" href="#" onclick="toggleFullScreen()">
+                                <i class="icofont-expand"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav-right">
+                        <li class="header-notification">
+                            <a href="#">
+                                <i class="icofont-notification text-light mr-3"></i>
+                            </a>
+                            {% if empSalaries or lowFuel %}
+                                <script>
+                                    $(document).ready(function onDocumentReady() {
+                                        setInterval(function doThisEveryTwoSeconds() {
+                                            toastr.options.closeButton = true;
+                                            toastr.options.progressBar = true;
+                                            toastr.options.positionClass = 'toast-bottom-right';
+                                            toastr.error('You Have New Notification');
+                                        }, 10000);
+                                    });
+                                </script>
+                                <span class="badge bg-warning mr-3"></span>
+                                <ul class="show-notification mr-3">
+                                    <li>
+                                        <h6>Notifications</h6>
+                                        <label class="label label-danger">New</label>
+                                    </li>
+                                    {% if lowFuel %}
+                                        <li>
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <a href={% url 'Add Summary' %}>
+                                                        <p class="notification-user font-weight-bold">Low Fuel Stock</p>
+                                                        <span class="notification-msg f-12">You Have Low Fuel Stock Click to Add New Stock</span><br>
+                                                    </a>
+                                                    <span class="notification-time">Just Now</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                    {% if empSalaries %}
+                                        {% for i in empSalaries %}
+                                            <li>
+                                                <div class="media">
+                                                    <div class="media-body">
+                                                        <a href={% url 'Edit Employee' i.id %}>
+                                                            <p class="notification-user font-weight-bold">{{ i.Name }}</p>
+                                                            <span class="notification-msg f-12">Its {{ i.Name }} Salary Time To Pay Salary Click Here.</span><br>
+                                                        </a>
+                                                        <span class="notification-time">Just Now</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            {% else %}
+                                <span class="badge mr-3"></span>
+                                <ul class="show-notification mr-3">
+                                    <li>
+                                        <h6>Notifications</h6>
+                                    </li>
+                                    <li>
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <p class="notification-msg">
+                                                    <b class="icofont-close-circled"> Nothings New Here</b>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                        </li>
+                        <li class="user-profile header-notification">
+                            <a href="#">
+                                <span class="icofont-user text-light"></span>
+                            </a>
+                            <ul class="show-notification profile-notification">
+                                <li>
+                                    <a href="{% url "Profile" %}">
+                                        <i class="icofont-user"></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url "Settings" %}">
+                                        <i class="icofont-settings-alt"></i> Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="icofont-user-suited"></i>Sign In As: <span
+                                            class="text-danger"><b>{{ Admin }}</b></span>
+                                    </a>
+                                </li>
+                                <li class="bg-danger">
+                                    <a href="{% url "Logout" %}">
+                                        <i class="icofont-logout text-light"> Sign Out</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+                <nav class="pcoded-navbar">
+                    <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+                    <div class="pcoded-inner-navbar main-menu mt-4">
+                        <ul class="pcoded-item pcoded-left-item">
+                            <li class="{% if request.resolver_match.url_name == "Dashboard" %}active{% endif %}">
+                                <a href="{% url "Dashboard" %}">
+                                    <span class="pcoded-micon"><i class="icofont-home"></i></span>
+                                    <span class="pcoded-mtext">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="pcoded-hasmenu {% if request.resolver_match.url_name == "Add Summary" or request.resolver_match.url_name == "View Summaries" or request.resolver_match.url_name == "Print Summary" %}active pcoded-trigger{% endif %}">
+                                <a href="javascript:void(0)">
+                                    <span class="pcoded-micon"><i class="icofont-listine-dots"></i></span>
+                                    <span class="pcoded-mtext">Summaries</span>
+                                </a>
+                                <ul class="pcoded-submenu">
+                                    <li class="{% if request.resolver_match.url_name == "Add Summary" %}active{% endif %}">
+                                        <a href="{% url "Add Summary" %}">
+                                            <span class="pcoded-mtext">Add Summary</span>
+                                        </a>
+                                    </li>
+                                    <li class="{% if request.resolver_match.url_name == "View Summaries" %}active{% endif %}">
+                                        <a href="{% url "View Summaries" %}">
+                                            <span class="pcoded-mtext">View Summaries</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="pcoded-hasmenu {% if request.resolver_match.url_name == "Add Debtor" or request.resolver_match.url_name == "View Debtors" or request.resolver_match.url_name == "Edit Debtor" %}active pcoded-trigger{% endif %}">
+                                <a href="javascript:void(0)">
+                                    <span class="pcoded-micon"><i class="icofont-funky-man"></i></span>
+                                    <span class="pcoded-mtext">Debtors</span>
+                                </a>
+                                <ul class="pcoded-submenu">
+                                    <li class="{% if request.resolver_match.url_name == "Add Debtor" %}active{% endif %}">
+                                        <a href="{% url "Add Debtor" %}">
+                                            <span class="pcoded-mtext">Add Debtor</span>
+                                        </a>
+                                    </li>
+                                    <li class="{% if request.resolver_match.url_name == "View Debtors" %}active{% endif %}">
+                                        <a href="{% url "View Debtors" %}">
+                                            <span class="pcoded-mtext">View Debtors</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="pcoded-hasmenu {% if request.resolver_match.url_name == "Add Employee" or request.resolver_match.url_name == "View Employees" or request.resolver_match.url_name == "Edit Employee" %}active pcoded-trigger{% endif %}">
+                                <a href="javascript:void(0)">
+                                    <span class="pcoded-micon"><i class="icofont-people"></i></span>
+                                    <span class="pcoded-mtext">Employees</span>
+                                </a>
+                                <ul class="pcoded-submenu">
+                                    <li class="{% if request.resolver_match.url_name == "Add Employee" %}active{% endif %}">
+                                        <a href="{% url "Add Employee" %}">
+                                            <span class="pcoded-mtext">Add Employee</span>
+                                        </a>
+                                    </li>
+                                    <li class="{% if request.resolver_match.url_name == "View Employees" %}active{% endif %}">
+                                        <a href="{% url "View Employees" %}">
+                                            <span class="pcoded-mtext">View Employees</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="pcoded-hasmenu {% if request.resolver_match.url_name == "Add Supplier" or request.resolver_match.url_name == "View Supplier" or request.resolver_match.url_name == "Edit Supplier" %}active pcoded-trigger{% endif %}">
+                                <a href="javascript:void(0)">
+                                    <span class="pcoded-micon"><i class="icofont-oil-truck"></i></span>
+                                    <span class="pcoded-mtext">Suppliers</span>
+                                </a>
+                                <ul class="pcoded-submenu">
+                                    <li class="{% if request.resolver_match.url_name == "Add Supplier" %}active{% endif %}">
+                                        <a href="{% url "Add Supplier" %}">
+                                            <span class="pcoded-mtext">Add Supplier</span>
+                                        </a>
+                                    </li>
+                                    <li class="{% if request.resolver_match.url_name == "View Supplier" %}active{% endif %}">
+                                        <a href="{% url "View Supplier" %}">
+                                            <span class="pcoded-mtext">View Suppliers</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="{% if request.resolver_match.url_name == "Money Counter" %}active{% endif %}">
+                                <a href="{% url "Money Counter" %}">
+                                    <span class="pcoded-micon"><i class="icofont-calculator"></i></span>
+                                    <span class="pcoded-mtext">Money Counter</span>
+                                </a>
+                            </li>
+                            <li class="{% if request.resolver_match.url_name == "Point Of Sale" %}active text-warning{% endif %}">
+                                <a href="{% url "Point Of Sale" %}">
+                                    <span class="pcoded-micon"><i class="icofont-law-document"></i></span>
+                                    <span class="pcoded-mtext">Point Of Sale</span>
+                                </a>
+                            </li>
+                            <li class="{% if request.resolver_match.url_name == "Security Cameras" %}active{% endif %}">
+                                <a href="{% url "Security Cameras" %}">
+                                    <span class="pcoded-micon"><i class="icofont-video-cam"></i></span>
+                                    <span class="pcoded-mtext">Security Cameras</span>
+                                </a>
+                            </li>
+                            <li class="mx-4" style="margin-top: 100px">
+                                <p class="text-light text-center font-weight-bold" id="Footer"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="d-flex justify-content-between pcoded-content pt-1">
+                    <p class="ml-3">{% block  backButton %}{% endblock %}</p>
+                    <p class="text-danger icofont-home mr-3"> / {% block  linkTitle %}{% endblock %}</p>
+                </div>
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content ml-3">
+                        {% if messages %}
+                            <div class="row justify-content-md-center">
+                                {% for message in messages %}
+                                    <div class="col-md-6">
+                                        <p class="text-center alert alert-{{ message.tags }}"
+                                           style="border-radius: 25px" role="alert"><b>{{ message }}</b></p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% block body %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="{% static "/resources/js/script.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/customScript.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/demo-12.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/toastr.min.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/pcoded.min.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/popper.js/popper.min.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/bootstrap/js/bootstrap.min.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/jquery.mCustomScrollbar.concat.min.js" %}"></script>
+</html>

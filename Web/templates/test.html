@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>khannanana</title>
+</head>
+<body>
+<div class="container" style="max-width: 700px;">
+
+    <div class="text-center" style="margin: 20px 0px 20px 0px;">
+        <a href="https://shouts.dev/" target="_blank"><img src="https://i.imgur.com/hHZjfUq.png"></a><br>
+        <span class="text-secondary">Add or Remove Input Fields Dynamically using jQuery</span>
+    </div>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="inputFormRow">
+                    <div class="input-group mb-3">
+                        <select name="num" id="ptrl" class="form-control m-input">
+                            <option value="">select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="ptrlnewRow"></div>
+            </div>
+            <div class="col-lg-6">
+                <div id="inputFormRow">
+                    <div class="input-group mb-3">
+                        <select name="num" id="dsl" class="form-control m-input">
+                            <option value="">select</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="dslnewRow"></div>
+            </div>
+        </div>
+        <button class="mt-lg-5" type="submit">Submit</button>
+    </form>
+</div>
+<div class="mt-5"></div>
+<table class="table table-bordered">
+    <tr>
+        <td>Date</td>
+        <td>Petrol</td>
+        <td>Diesel</td>
+    </tr>
+    {% for i in data %}
+        <tr>
+            <td>{{ i.Date }}</td>
+            <td>{{ i.Petrol_Readings }}</td>
+            <td>{{ i.Diesel_Readings }}</td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+<script type="text/javascript">
+    $("#ptrl").change(function () {
+        const addRow = $('#ptrlnewRow');
+        addRow.empty();
+        let j = 64 + parseInt($(this).val());
+        for (let i = 65; i <= j; i++) {
+            let html = '';
+            html += '<div class="input-group mb-3">';
+            html += '<lable>Enter Ptrl Data </lable>' + String.fromCharCode(i);
+            html += '<input type="text" name="ptrl" class="form-control m-input">';
+            html += '</div>';
+            addRow.append(html);
+        }
+    });
+    $("#dsl").change(function () {
+        const addRow = $('#dslnewRow');
+        addRow.empty();
+        let j = 64 + parseInt($(this).val());
+        for (let i = 65; i <= j; i++) {
+            let html = '';
+            html += '<div class="input-group mb-3">';
+            html += '<lable>Enter Dsl Data </lable>' + String.fromCharCode(i);
+            html += '<input type="text" name="dsl" class="form-control m-input">';
+            html += '</div>';
+            addRow.append(html);
+        }
+    });
+</script>
+</body>
+</html>

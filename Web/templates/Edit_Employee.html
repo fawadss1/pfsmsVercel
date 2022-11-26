@@ -1,0 +1,396 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %}Edit Employee {% endblock %}
+{% block linkTitle %}Employees / View Employees / Edit Employee {% endblock %}
+{% block backButton %}
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/Emp_Id_Card.css" %}">
+    <script src="{% static 'resources/images/qrcode.js' %}"></script>
+    <a class="cardStyling" role="button" onclick="goBack()" href="#"><img src="{% static 'resources/images/back.png' %}"
+                                                                          alt="Back" width="60" height="30"></a>
+{% endblock %}
+{% block body %}
+    {% for i in EmployeeDetails %}
+        <script>
+            $(document).ready(function () {
+                $('#Salary').keyup(function () {
+                    if ($(this).val() === '' || $(this).val() === '0') {
+                        this.value = 0;
+                        $("#Salarystatus").val('Not Paid');
+                    } else if ($(this).val() < {{ i.Salary }}) {
+                        $("#Salarystatus").val('Partially Paid');
+                    } else if ($(this).val() == {{ i.Salary }}) {
+                        $("#Salarystatus").val('Fully Paid');
+                    } else if ($(this).val() > {{ i.Salary }}) {
+                        $("#Salarystatus").val('Advance Paid');
+                    }
+                });
+            });
+        </script>
+        <div class="modal fade" id="notif" data-backdrop="static" data-keyboard="true" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title float-left"><b class="empName"></b></h3>
+                    </div>
+                    <div class="body">
+                        <h4 class="text-center">Salary Already Paid For This Month</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-round icofont-check-circled cardStyling"
+                                data-dismiss="modal"> Ok
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form class="needs-validation" method="POST" action="" novalidate>
+            {% csrf_token %}
+            <div class="modal fade" id="EmpSalary" data-backdrop="static" data-keyboard="true" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title float-left"><b class="empName"></b> Salary Time</h5>
+                        </div>
+                        <div class="body">
+                            <table class="table">
+                                <tr>
+                                    <th>Basic Salary</th>
+                                    <th>Salary To Be Paid</th>
+                                    <th>Salary Status</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon bg-dark icofont-money Styling"></span>
+                                            <input type="text" value="{{ i.Name }}" name="emp_name" hidden>
+                                            <input type="text" class="form-control Styling font-weight-bold"
+                                                   value="{{ i.Salary }}" name="basic_salary" id="emp" readonly>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon bg-danger icofont-minus-circle Styling"></span>
+                                            <input type="number" class="form-control Styling" name="salary_paid"
+                                                   step=any id="Salary" required>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <select class="form-control style"
+                                                    onfocus="this.defaultIndex=this.selectedIndex;"
+                                                    onchange="this.selectedIndex=this.defaultIndex;"
+                                                    style="padding: 10px; height: 40px;" name="salary_status"
+                                                    id="Salarystatus" readonly>
+                                                <option value="">Status</option>
+                                                <option value="Not Paid"> Not Paid</option>
+                                                <option value="Partially Paid"> Partially Paid</option>
+                                                <option value="Fully Paid">Fully Paid</option>
+                                                <option value="Advance Paid">Advanced Paid</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-danger btn-round icofont-close-circled cardStyling"
+                                    data-dismiss="modal"> Cancel
+                            </button>
+                            <button type="submit" name="salarypaid"
+                                    class="btn btn-success btn-round icofont-check-circled cardStyling"> Pay Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form class="needs-validation" method="POST" action="" novalidate>
+            {% csrf_token %}
+            <div class="card-block">
+                <div class="form-group row mt-1">
+                    <div class="col-md-12">
+                        <h5 class="text-right"><b>In Service Time: {{ serviceTime }}</b></h5>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="name"><strong>Employee Name</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-user style"></span>
+                            <input type="text" class="form-control style" name="name" id="name" value="{{ i.Name }}"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="email"><strong>Email Address</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-email style"></span>
+                            <input type="email" class="form-control style" name="email" id="email"
+                                   value="{{ i.Email }}">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="mob_no"><strong>Mobile Number</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-phone style"></span>
+                            <input type="text" class="form-control style" name="mob_no" id="mob_no"
+                                   value="{{ i.Mobile }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="cnic"><strong>CNIC No.</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-id-card style"></span>
+                            <input type="text" class="form-control style" name="cnic" id="cnic"
+                                   value="{{ i.CNIC }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="role"><strong>Role</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-label style"></span>
+                            <select class="form-control style" style="padding: 8px; height: 52px;" name="role"
+                                    id="role">
+                                <option value="{{ i.Role }}" selected>{{ i.Role }}</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Sale Man">Sale Man</option>
+                                <option value="Watch Man">Watch Man</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="salary"><strong>Monthly Salary Rs.</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-money style"></span>
+                            <input type="number" class="form-control style" name="salary" id="salary"
+                                   value="{{ i.Salary }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="doj"><strong>Date Of Join</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-calendar style"></span>
+                            <input type="text" class="form-control style" name="doj" id="doj"
+                                   value="{{ i.Date_of_Join }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="res_address"><strong>Resident Address</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-ui-email style"></span>
+                            <input type="text" class="form-control style" name="res_address" id="res_address"
+                                   value="{{ i.Resident_Address }}" required>
+                        </div>
+                    </div>
+                    <div class="col-2 mt-5 ml-5">
+                        <button type="submit" name="Update"
+                                class="btn btn-round btn-success icofont-refresh cardStyling">
+                            Update Record
+                        </button>
+                    </div>
+                    <div class="col-2 mt-5 ">
+                        <button type="button" class="btn btn-round btn-danger icofont-trash cardStyling"
+                                data-toggle="modal"
+                                data-target="#deleted"> Delete Record
+                        </button>
+                    </div>
+                    <div class="col-2 mt-5 ">
+                        <button type="button" class="btn btn-round btn-warning icofont-law-document cardStyling"
+                                data-toggle="modal" data-target="#details"> Salary Details
+                        </button>
+                    </div>
+                    <div class="col-2 mt-5 ">
+                        <button type="button" class="btn btn-round btn-secondary icofont-package cardStyling"
+                                onclick="openModal()"> Pay Salary
+                        </button>
+                    </div>
+                    <div class="col-2 mt-5 ">
+                        <button type="button" class="btn btn-round btn-dark icofont-credit-card cardStyling"
+                                data-toggle="modal" data-target="#idCardGenerate"> Generate ID Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form class="needs-validation" method="POST" action="" novalidate>
+            {% csrf_token %}
+            <div class="modal fade" id="deleted" data-backdrop="static" data-keyboard="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Do You Want To Delete ?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Employee Name : <b class="empName"></b><br>
+                            Date of Join : <b class="empDOJ"></b><br>
+                            Total Salary Records Found : <b>{{ salaryDetails.count }}</b><br>
+                            <p class="mt-2">All The Salaries Records Will Be Deleted</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-success btn-round icofont-close-circled cardStyling"
+                                    data-dismiss="modal"> Cancel
+                            </button>
+                            <button type="submit" name="Delete"
+                                    class="btn btn-danger btn-round icofont-trash cardStyling"> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="modal fade" id="details" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="printableArea">
+                        <img src="{% static 'resources/images/pakistan-flag.jpg' %}"
+                             style="position: absolute;width: 100%;height: 99%;opacity: 0.1;" alt="Model_bg">
+                        <div class="header">
+                            <img style="width: 100%" src="{% static 'resources/images/Header.png' %}" alt="Header">
+                            <p class="text-dark float-left ml-3"><b>Date: <span class="JDate"></span></b></p>
+                            <p class="text-dark float-right mr-3"><b>Time: <span class="JTime"></span></b></p>
+                        </div>
+                        <h5 class="modal-title text-center mb-3 mt-2">Salary Details of <b class="empName"></b></h5>
+                        <hr>
+                        <p class="ml-3">Total Records: {{ salaryDetails.count }}</p>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Payment Date</th>
+                                <th class="text-center">Basic Salary</th>
+                                <th class="text-center">Total Paid Rs</th>
+                                <th class="text-center">Remained Rs</th>
+                                <th class="text-center">Salary Status</th>
+                            </tr>
+                            </thead>
+                            {% for j in salaryDetails %}
+                                <tbody>
+                                <tr>
+                                    <td class="text-center">{{ j.Salary_Date|date:"d/M/Y" }}</td>
+                                    <td class="text-center">{{ i.Salary }}</td>
+                                    <td class="text-center">{{ j.Total_Paid_Rs }}</td>
+                                    <td class="text-center">{{ j.Total_Remained_Rs }}</td>
+                                    <td class="text-center">{{ j.Salary_Status }}</td>
+                                </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                        <div class="footer text-center text-warning" style="border: 1px solid red; background-color:black;"> &copy; <span
+                                class="JYear"></span> All Rights Reserved. Developed By Fawad <span
+                                class="icofont-brand-whatsapp"> +923418357982</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-round icofont-close-circled cardStyling"
+                                data-dismiss="modal"> Cancel
+                        </button>
+                        <button class="btn btn-success btn-round icofont-printer cardStyling" id="btn"
+                                onclick="printSlip('printableArea')"> Print Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="modal fade" id="idCardGenerate" data-backdrop="static" data-keyboard="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span class="empName"></span> ID Card</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row ml-3 mt-3" id="content">
+                        <div class="col-6">
+                            <div class="card">
+                                <div class="text-center">
+                                    {% for p in pumpInfo %}
+                                        <h3 class="text-center text-danger mt-5"><b>{{ p.Pump_Name }}</b></h3>
+                                    {% endfor %}
+                                    <img class="profile-img" src="{% static 'resources/images/userPic.png' %}" alt="PIC">
+                                    <div class="names">
+                                        <h2 class="empName"></h2>
+                                        <h4 class="text-primary empRole"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card">
+                                <div class="mt-4 ml-4">
+                                    <h5 class="mt-5"><b>D.O.J : </b><span class="empDOJ"></span></h5>
+                                    <h5 class="mt-3"><b>Mobile No. : </b><span class="empMobile"></span></h5>
+                                    <h5 class="mt-3"><b>CNIC No. : </b><span class="empCnic"></span></h5>
+                                    <h5 class="mt-3"><b>Address : </b><span class="empResAddress"></span></h5>
+                                    <svg class="mt-3" id="barcode"></svg>
+                                </div>
+                                <p class="copyright ml-5">Developed By Fawad <span
+                                        class="icofont-brand-whatsapp"> +923418357982</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-round icofont-close-circled cardStyling"
+                            data-dismiss="modal"> Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger btn-round icofont-download-alt cardStyling"
+                            id="cmd"> Save As PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        {% for i in EmployeeDetails %}
+            $('.empName').text("{{ i.Name }}");
+            $('.empMobile').text("{{ i.Mobile }}");
+            $('.empCnic').text("{{ i.CNIC }}");
+            $('.empRole').text("{{ i.Role }}");
+            $('.empSalary').text("{{ i.Salary }}");
+            $('.empDOJ').text("{{ i.Date_of_Join|date:"d/M/Y" }}");
+            $('.empResAddress').text("{{ i.Resident_Address }}");
+            let empName = "{{ i.Name }}";
+        {% endfor %}
+        $('#cmd').click(function () {
+            domtoimage.toPng(document.getElementById('content'))
+                .then(function (blob) {
+                    const content = $('#content');
+                    const pdf = new jsPDF('l', 'pt', [content.width(), content.height()]);
+                    pdf.addImage(blob, 'png', 0, 0, content.width(), content.height());
+                    pdf.save(empName + " ID Card.pdf");
+                });
+        });
+
+        function printSlip(area) {
+            document.body.innerHTML = document.getElementById(area).innerHTML;
+            window.print();
+            location.reload();
+        }
+
+        JsBarcode("#barcode", empName, {
+            format: "code128",
+            background: "transparent",
+            lineColor: "#0c1254",
+            width: 1.4,
+            height: 70,
+            displayValue: false
+        });
+        {% if salary %}
+            $(document).ready(function () {
+                $('#EmpSalary').modal('show');
+            });
+        {% endif %}
+        function openModal() {
+            {% if salary %}
+                $('#EmpSalary').modal();
+            {% else %}
+                $('#notif').modal();
+            {% endif %}
+        }
+    </script>
+    <script src="{% static 'resources/js/jspdf.min.js' %}"></script>
+    <script src="{% static 'resources/js/dom-to-image.min.js' %}"></script>
+{% endblock body %}

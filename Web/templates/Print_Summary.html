@@ -1,0 +1,286 @@
+{% extends 'Base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title %} Print Summary {% endblock %}
+{% block linkTitle %}Summaries / View Summaries / Print Summary {% endblock %}
+{% block backButton %}
+    <a class="cardStyling" role="button" onclick="goBack()" href="#"><img src="{% static 'resources/images/back.png' %}"
+                                                                          alt="Back" width="60"
+                                                                          height="30"></a> {% endblock %}
+{% block body %}
+    <button class="btn btn-danger btn-round icofont-printer cardStyling" onclick="printSlip('printSummary')"> Print Out
+    </button>
+    <div class="mr-2 mt-3 mb-3" id="printSummary">
+        <style>
+            .cellStyling {
+                border: 1px solid #a117eb;
+                text-align: center;
+                padding: 2px;
+            }
+
+            .cellTable {
+                text-align: center;
+            }
+
+            .sideStyling {
+                border: 1px solid #a117eb;
+                text-align: center;
+                padding: 2px;
+                background: yellow;
+            }
+
+            @media screen {
+                div.header {
+                    display: none;
+                }
+
+                div.seal {
+                    display: none;
+                }
+
+                div.footer {
+                    display: none;
+                }
+            }
+
+            @media print {
+                div.header {
+                    position: center;
+                    top: 0;
+                }
+
+                p.Date {
+                    display: none;
+                }
+
+                div.seal {
+                    position: fixed;
+                    bottom: 0;
+                }
+
+                div.footer {
+                    position: fixed;
+                    bottom: 0;
+                    background-color: black;
+                    border: 2px solid red;
+                }
+
+            }
+        </style>
+        {% for i in current_data %}
+            <div class="header">
+                <img src="{% static 'resources/images/pakistan-flag.jpg' %}" alt="Body_bg"
+                     style="position: absolute;width: 100%;height: 99%;opacity: 0.1;">
+                <p class="float-left ml-2"><b>Slip No: {{ i.id|add:"-1" }} </b></p>
+                <p class="float-right mr-2"><b>Day Sale Man: {{ i.Today_Sale_Man }}<br>
+                    Night Sale Man: {{ i.Tonight_Sale_Man }}</b></p>
+                <img style="width: 100%" src="{% static 'resources/images/Header.png' %}" alt="Header">
+                <p class="float-left  ml-2 mt-1"><b>Date: {{ i.Date|date:"d/M/Y" }}</b></p>
+                <p class="float-right mr-2 mt-1"><b>Time: <span class="JTime"></span></b></p>
+                {% for ii in pump_name %}
+                    <h5 class="text-center"><b> {{ ii.Pump_Name }}<br>Today Summary</b></h5>
+                {% endfor %}
+                <hr>
+            </div>
+            <p class="text-left Date"><b>Record of Date: {{ i.Date|date:"d-M-Y" }}</b></p>
+            <table class="cardStyling" style="width: 100%;">
+                <tr class="bg-success text-light">
+                    <th class="cellStyling"><b>Today Record</b></th>
+                    <th class="cellStyling"><b>Petrol 'A'</b></th>
+                    <th class="cellStyling"><b>Petrol 'B'</b></th>
+                    <th class="cellStyling"><b>Petrol 'C'</b></th>
+                    <th class="cellStyling"><b>Petrol 'D'</b></th>
+                    <th class="cellStyling"><b>Diesel 'A'</b></th>
+                    <th class="cellStyling"><b>Diesel 'B'</b></th>
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Fuel Prices</b></td>
+                    <td colspan="4" class="cellStyling"><b>{{ i.Petrol_Price }}</b></td>
+                    <td colspan="2" class="cellStyling"><b>{{ i.Diesel_Price }}</b></td>
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Previous Readings</b></td>
+                    {% for i in previous_data %}
+                        <td class="cellStyling"><b>{{ i.Petrol_ReadingA|intcomma }}</b></td>
+                        <td class="cellStyling"><b>{{ i.Petrol_ReadingB|intcomma }}</b></td>
+                        <td class="cellStyling"><b>{{ i.Petrol_ReadingC|intcomma }}</b></td>
+                        <td class="cellStyling"><b>{{ i.Petrol_ReadingD|intcomma }}</b></td>
+                        <td class="cellStyling"><b>{{ i.Diesel_ReadingA|intcomma }}</b></td>
+                        <td class="cellStyling"><b>{{ i.Diesel_ReadingB|intcomma }}</b></td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Current Readings</b></td>
+                    <td class="cellStyling"><b>{{ i.Petrol_ReadingA|intcomma }}</b></td>
+                    <td class="cellStyling"><b>{{ i.Petrol_ReadingB|intcomma }}</b></td>
+                    <td class="cellStyling"><b>{{ i.Petrol_ReadingC|intcomma }}</b></td>
+                    <td class="cellStyling"><b>{{ i.Petrol_ReadingD|intcomma }}</b></td>
+                    <td class="cellStyling"><b>{{ i.Diesel_ReadingA|intcomma }}</b></td>
+                    <td class="cellStyling"><b>{{ i.Diesel_ReadingB|intcomma }}</b></td>
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Fuel Sold</b></td>
+                    <td colspan="4" class="cellStyling"><b>{{ i.Total_Petrol_Sold|floatformat:2 |intcomma }} Ltrs</b>
+                    </td>
+                    <td colspan="2" class="cellStyling"><b>{{ i.Total_Diesel_Sold|floatformat:2 |intcomma }} Ltrs</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Fuel Rupees</b></td>
+                    <td colspan="4" class="cellStyling"><b>{{ i.Total_Petrol_Sold|floatformat:2 |intcomma }}
+                        x {{ i.Petrol_Price }} = {{ i.Total_Petrol_Rs|floatformat:2 |intcomma }}</b></td>
+                    <td colspan="2" class="cellStyling"><b>{{ i.Total_Diesel_Sold|floatformat:2 |intcomma }}
+                        x {{ i.Diesel_Price }} = {{ i.Total_Diesel_Rs|floatformat:2 |intcomma }}</b></td>
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Fuel InStock</b></td>
+                    {% for pre in previousFuelStock %}
+                        {% for c in currentFuelStock %}
+                            <td colspan="4" class="cellStyling">
+                                <b>{{ pre.Total_Petrol_In_Stock|floatformat:2 |intcomma }}
+                                    - {{ i.Total_Petrol_Sold|floatformat:2 |intcomma }}
+                                    = {{ c.Total_Petrol_In_Stock|floatformat:2 |intcomma }}
+                                    Ltrs</b>
+                            </td>
+                            <td colspan="2" class="cellStyling">
+                                <b>{{ pre.Total_Diesel_In_Stock|floatformat:2 |intcomma }}
+                                    - {{ i.Total_Diesel_Sold|floatformat:2 |intcomma }}
+                                    = {{ c.Total_Diesel_In_Stock|floatformat:2 |intcomma }}
+                                    Ltrs</b>
+                            </td>
+                        {% endfor %}
+                    {% endfor %}
+                </tr>
+                {% for rs in totalMonthRs %}
+                    {% if rs.Cashed_In > 0 %}
+                        <tr class="bg-success text-light">
+                            <td class="cellStyling"><b>Cash In</b></td>
+                            <th colspan="3" class="cellStyling"><b>Total Cash In</b></th>
+                            <th colspan="3" class="cellStyling"><b>Cash In Reason</b></th>
+                        </tr>
+                        <tr>
+                            <th class="sideStyling"><b>*</b></th>
+                            <td colspan="3" class="cellStyling"><b>Rs. {{ rs.Cashed_In|floatformat:2 |intcomma }}</b>
+                            </td>
+                            <td colspan="3" class="cellStyling"><b>{{ rs.Cashed_In_Reason }}</b></td>
+                        </tr>
+                    {% elif rs.Cashed_Out > 0 %}
+                        <tr class="bg-success text-light">
+                            <td class="cellStyling"><b>Cash Out</b></td>
+                            <th colspan="3" class="cellStyling"><b>Total Cash Out</b></th>
+                            <th colspan="3" class="cellStyling"><b>Cash Out Reason</b></th>
+                        </tr>
+                        <tr>
+                            <th class="sideStyling"><b>*</b></th>
+                            <td colspan="3" class="cellStyling"><b>Rs. {{ rs.Cashed_Out|floatformat:2 |intcomma }}</b>
+                            </td>
+                            <td colspan="3" class="cellStyling"><b>{{ rs.Cashed_Out_Reason }}</b></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if debtors or expenses %}
+                    <tr class="bg-success text-light">
+                        <td class="cellStyling"><b>*</b></td>
+                        <td class="cellStyling" colspan="4"><b>Today Debtors</b></td>
+                        <td class="cellStyling" colspan="2"><b>Day Expanses</b></td>
+                    </tr>
+                    <tr class="cellStyling">
+                        <td class="sideStyling"><b>-</b></td>
+                        {% if debtors %}
+                            <td class="cellStyling" colspan="4">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th class="cellTable">Debtor Name</th>
+                                        <th class="cellTable">Current Total Debt</th>
+                                        <th class="cellTable">Today Debit (-)</th>
+                                        <th class="cellTable">Today Credit (+)</th>
+                                    </tr>
+                                    {% for j in debtors %}
+                                        <tr>
+                                            <td class="cellTable">{{ j.Debtor_ID }}</td>
+                                            <td class="cellTable">{{ j.Current_Total_Debt|floatformat:2 |intcomma }}</td>
+                                            <td class="cellTable">{{ j.Today_Debt|floatformat:2 |intcomma }}</td>
+                                            <td class="cellTable">{{ j.Today_Credit|floatformat:2 |intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="2"><b>Total Rs : </b></td>
+                                        <td class="cellTable text-underline">
+                                            <b>{{ i.Today_Total_Debit|floatformat:2 |intcomma }}</b>
+                                        </td>
+                                        <td class="cellTable text-underline">
+                                            <b>{{ i.Today_Total_Credit|floatformat:2 |intcomma }}</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        {% else %}
+                            <td colspan="4" class="cellStyling">
+                                <h3>No Debtors Record Found</h3>
+                            </td>
+                        {% endif %}
+                        {% if expenses %}
+                            <td class="cellStyling" colspan="2">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th class="cellTable">Expansese List</th>
+                                        <th class="cellTable">Expanses Rs</th>
+                                    </tr>
+                                    {% for j in expenses %}
+                                        <tr>
+                                            <td class="cellTable">{{ j.Expense_Name }}</td>
+                                            <td class="cellTable">{{ j.Expense_Price|floatformat:2 |intcomma }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <th class="cellTable">Total Rs :</th>
+                                        <th class="cellTable">
+                                            <u>{{ i.Today_Total_Expenses|floatformat:2 |intcomma }}</u></th>
+                                    </tr>
+                                </table>
+                            </td>
+                        {% else %}
+                            <td colspan="2" class="cellStyling">
+                                <h3>No Expanses Record Found</h3>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+                <tr class="bg-success text-light">
+                    <td class="cellStyling"><b>*</b></td>
+                    <td colspan="3" class="cellStyling"><b>Today Total Rupees</b></td>
+                    <td colspan="4" class="cellStyling"><b>Total Month Rupees</b></td>
+                </tr>
+                <tr>
+                    <td class="sideStyling"><b>Total Rupees</b></td>
+                    <td colspan="3" class="cellStyling"><b>{{ i.Total_Petrol_Rs|floatformat:2|intcomma }}
+                        + {{ i.Total_Diesel_Rs|floatformat:2|intcomma }}
+                        + {{ i.Today_Total_Credit|floatformat:2|intcomma }}
+                        - {{ i.Today_Total_Debit|floatformat:2|intcomma }}
+                        - {{ i.Today_Total_Expenses|floatformat:2|intcomma }}
+                        = {{ i.Today_Rs|floatformat:2 |intcomma }}</b></td>
+                    <td colspan="4" class="cellStyling"><b>
+                        {% for rs in previousDayRs %}{{ rs.Total_Month_Rs|floatformat:2|intcomma }} +
+                            {{ i.Today_Rs|floatformat:2|intcomma }}{% endfor %}
+                        {% for tmrs in totalMonthRs %}{% if tmrs.Cashed_Out %}- {{ tmrs.Cashed_Out }} =
+                            {{ tmrs.Total_Month_Rs|floatformat:2|intcomma }}</b>{% else %}=
+                            <b>{{ tmrs.Total_Month_Rs|floatformat:2|intcomma }}</b>{% endif %}{% endfor %}
+                    </td>
+                </tr>
+            </table>
+        {% endfor %}
+        <div class="seal">
+            <p class="text-right mb-5 fixed-bottom"><b>Manager Seal/Signature:_________________</b></p>
+        </div>
+        <div class="footer text-center text-warning"> &copy; <span class="JYear"></span>
+            All Rights Reserved. Developed By Fawad <span class="icofont-brand-whatsapp"> +923418357982</span>
+        </div>
+    </div>
+    <script>
+        function printSlip(area) {
+            document.body.innerHTML = document.getElementById(area).innerHTML;
+            window.print();
+            location.reload();
+        }
+    </script>
+{% endblock body %}

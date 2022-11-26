@@ -1,0 +1,81 @@
+{% extends 'Base.html' %}
+{% block title %}Add Debtor {% endblock %}
+{% block linkTitle %}Debtors / Add Debtor {% endblock %}
+{% block body %}
+    <form class="needs-validation" method="POST" action="" novalidate>
+        {% csrf_token %}
+        <div class="card-block">
+            <div class="form-group row">
+                <div class="col-md-5">
+                    <label class="required" for="debtor_name"><strong>Name</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-user style"></span>
+                        <input type="text" class="form-control style" name="debtor_name" id="debtor_name"
+                               placeholder="Enter Your Debtor Name" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="required" for="father_name"><strong>Father Name</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-business-man style"></span>
+                        <input type="text" class="form-control style" name="father_name" id="father_name"
+                               placeholder="Enter Your Debtor Father Name" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label for="email"><strong>Email</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-email style"></span>
+                        <input type="email" class="form-control style" name="email" id="email"
+                               placeholder="Enter Debtor Email Address">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="required" for="mob_no"><strong>Mobile No.</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-phone style"></span>
+                        <input type="text" class="form-control style" data-inputmask="'mask': '0399-99999999'"
+                               name="mob_no" id="mob_no" maxlength="12" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="required" for="cnic"><strong>CNIC No.</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-id style"></span>
+                        <input type="text" class="form-control style" data-inputmask="'mask': '99999-9999999-9'"
+                               placeholder="XXXXX-XXXXXXX-X" name="cnic" id="cnic" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="required" for="res_address"><strong>Resident Address</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-ui-email style"></span>
+                        <input type="text" class="form-control style" name="res_address" id="res_address"
+                               placeholder="Enter Your Debtor Resident Address" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="required" for="current_debt"><strong>Current Debt Amount</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-money style"></span>
+                        <input type="number" class="form-control style" name="current_debt" id="current_debt" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <label class="required" for="summary_date"><strong>Select Date Of Debt</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-addon bg-dark icofont-calendar style"></span>
+                        <input type="date" class="form-control style" name="supply_date" id="date"
+                               min="{{ Date|date:'Y-m-d' }}" max="{{ Date|date:'Y-m-d' }}" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center col-10 mt-3">
+                    <button type="submit" class="btn btn-outline-success btn-round cardStyling">Add Debtor</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(":input").inputmask();
+        </script>
+    </form>
+{% endblock %}

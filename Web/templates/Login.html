@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <title>Login | PFSMS</title>
+    <link href="{% static "/resources/css/google_fonts.css" %}" rel="stylesheet">
+    <link rel="icon" type="image/icon" href="{% static "/resources/images/favicon.ico" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/bootstrap/css/bootstrap.min.css" %}">
+    <script type="text/javascript" src="{% static "/resources/js/jquery/jquery.min.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/icon/icofont/icofont.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/css/style.css" %}">
+    <style>
+        .style {
+            padding: 13px;
+            border: 2px solid #be85f2;
+            border-radius: 10px;
+        }
+
+        .style:focus {
+            border: 2px solid #be85f2;
+            box-shadow: 0 0 20px rgba(95, 7, 245, 0.9);
+        }
+
+        .animate {
+            -webkit-animation: animatezoom 2s;
+        }
+
+        @-webkit-keyframes animatezoom {
+            from {
+                -webkit-transform: scale(0)
+            }
+            to {
+                -webkit-transform: scale(1)
+            }
+        }
+
+        .cardStyling {
+            box-shadow: 0 12px 12px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        #togglePass:hover {
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="fix-menu">
+<div class="theme-loader">
+    <div class="ball-scale">
+        <div class='contain'>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+            <div class="ring">
+                <div class="frame"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="login-card card-block auth-body mr-auto ml-auto">
+                    <form class="needs-validation animate" method="POST" novalidate>
+                        {% csrf_token %}
+                        <div class="text-center">
+                            <img src="{% static 'resources/images/Login.png' %}" alt="Logo">
+                        </div>
+                        <div class="auth-box">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="text-center txt-primary">Log In</h3>
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            <div style="font-size: 15px; border-radius: 25px"
+                                                 class="text-center alert alert-{{ message.tags }}" role="alert">
+                                                <b>{{ message }}</b></div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <hr/>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon bg-dark style"><i class="icofont-user-alt-3"></i></span>
+                                <input type="text" class="form-control style" name="username" id="username"
+                                       placeholder="Enter Your Username" autofocus required>
+                            </div>
+                            <div class="mt-1 input-group">
+                                <span class="input-group-addon bg-dark style"><i class="icofont-ui-password"></i></span>
+                                <input type="password" class="form-control style" name="password"
+                                       placeholder="Enter Your Password" id="pass" required><span
+                                    class="input-group-addon bg-light text-dark style"><i id="togglePass"
+                                                                                          class="icofont-eye-blocked"></i></span>
+                            </div>
+                            <div class="mt-3 text-right font-weight-bold">
+                                <p><a href="{% url "Recover Password" %}" class="text-underline">Forget Password?</a>
+                                </p>
+                            </div>
+                            {% if request.GET.next %}
+                                <input type="hidden" name="next" id="nextPage" value="{{ request.GET.next }}">
+                            {% endif %}
+                            <div class="row m-t-30">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Sign In" id="signIn"
+                                           class="hor-grd btn btn-grd-danger btn-round btn-md btn-block cardStyling">
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <hr/>
+                                </div>
+                            </div>
+                            <p class="text-dark font-weight-bold" id="Footer"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    /* $('#signIn').click(function () {
+         const userName = $('#username').val();
+         const pass = $('#pass').val();
+         const nextPage = $('#nextPage').val();
+         const csrf = $('[name=csrfmiddlewaretoken]').val();
+         const data = {'username': userName, 'password': pass, 'next': nextPage, 'csrfmiddlewaretoken': csrf}
+         $.ajax({
+             method: "POST",
+{#url: "{% url 'Login' %}",#}
+            data: data,
+            success: function (response) {
+            }
+        });
+    });*/
+    const togglePassword = document.querySelector("#togglePass");
+    const password = document.querySelector("#pass");
+    togglePassword.addEventListener("click", function () {
+        const type = password.getAttribute("type") === "password" ? "text" : "password";
+        let icon = togglePassword.getAttribute("class");
+        if (icon == "icofont-eye-blocked")
+            icon = "icofont-eye";
+        else
+            icon = "icofont-eye-blocked";
+        password.setAttribute("type", type);
+        $(this).removeClass();
+        $(this).toggleClass(icon);
+    });
+</script>
+<script type="text/javascript" src="{% static "/resources/js/popper.js/popper.min.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/bootstrap/js/bootstrap.min.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/customScript.js" %}"></script>
+<script type="text/javascript" src="{% static "/resources/js/common-pages.js" %}"></script>
+</body>
+</html>

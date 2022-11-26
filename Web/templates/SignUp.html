@@ -1,0 +1,369 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/icon" href={% static "/resources/images/favicon.ico" %}/>
+    <link rel="stylesheet" type="text/css" href={% static "/css/bootstrap.min.css" %}>
+    <script type="text/javascript" src={% static "js/bootstrap.min.js" %}></script>
+    <script type="text/javascript" src={% static "/resources/js/jquery/jquery.min.js" %}></script>
+    <link rel="stylesheet" type="text/css" href="{% static "/resources/icon/icofont/icofont.css" %}">
+    <script type="text/javascript" src={% static "/resources/js/jquery/jquery.inputmask.bundle.js" %}></script>
+    <title>SignUp | PFSMS</title>
+    <Style type='text/css'>
+        body {
+            background-image: url({% static "resources/images/signup_bg.jpg" %});
+            font-family: "Times New Roman", serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-image: url({% static "resources/images/signup_bg.jpg" %});
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(180deg, #ea0782 0%, #3730f5 99%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(180deg, #3730f5 0%, #ea0782 99%);
+        }
+
+        .style {
+            padding: 15px;
+            border: 2px solid #be85f2;
+            border-radius: 10px;
+        }
+
+        .style:focus {
+            border: 2px solid #be85f2;
+            box-shadow: 0 0 20px rgba(95, 7, 245, 0.9);
+        }
+
+        .required:after {
+            font-size: 20px;
+            content: "*";
+            color: red;
+        }
+
+        hr.design {
+            margin-top: 50px;
+            border-top: 3px double #f3062f;
+        }
+
+        .cardStyling {
+            box-shadow: 0 12px 12px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        #togglePass:hover {
+            color: blue;
+            cursor: pointer;
+        }
+    </Style>
+</head>
+<body>
+<img class="img-fluid mx-auto d-block mt-1" src="{% static 'resources/images/Header.png' %}" alt="Header">
+<h3 class="mt-2 text-center text-light"><b style="text-shadow: 0 0 5px red, 0 0 5px #0000FF;">Please Fill Up The
+    Fields Carefully Thank You</b></h3>
+<a class="cardStyling" role="button" onclick="goBack()" href="#"><img src="{% static 'resources/images/back.png' %}"
+                                                                      alt="Back" width="70" height="40"></a>
+<hr>
+<form class="needs-validation" method="POST" action="" novalidate>
+    {% csrf_token %}
+    <div class="container pt-4">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+                <label class="required" for="first_owner"><strong>First Owner Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-business-man-alt-1 style"></span>
+                    <input type="text" class="form-control style" name="first_owner" id="first_owner"
+                           placeholder="Enter Owner Name" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="second_owner"><strong>Second Owner Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-business-man-alt-1 style"></span>
+                    <input type="text" class="form-control style" name="second_owner" id="second_owner"
+                           placeholder="Enter Second Owner Name If Avalible">
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="first_mob_no"><strong>First Mobile Number</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-phone style"></span>
+                    <input type="text" class="form-control style" data-inputmask="'mask': '0399-99999999'"
+                           name="first_mob_no" id="first_mob_no" maxlength="12" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label for="second_mob_no"><strong>Second Mobile Number</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-phone style"></span>
+                    <input type="text" class="form-control style" data-inputmask="'mask': '0399-99999999'"
+                           name="second_mob_no" id="second_mob_no" maxlength="12">
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="pump_name"><strong>Pump Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-building-alt style"></span>
+                    <input type="text" class="form-control style" name="pump_name" id="pump_name"
+                           placeholder="Enter Your Pump Name" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="email"><strong>Email Address</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-email style"></span>
+                    <input type="email" class="form-control style" name="email" id="email"
+                           placeholder="Enter Your Email Address" required>
+                </div>
+            </div>
+            <div class="col-md-12 mt-4">
+                <label class="required" for="add"><strong>Pump Address</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-ui-email style"></span>
+                    <input type="text" class="form-control style" name="pump_add" id="add"
+                           placeholder="Enter Your Pump Address" required>
+                </div>
+            </div>
+            <hr class="design">
+            <div class="col-md-6 mt-4">
+                <label class="required" for="total_balance"><strong>Current Month Balance</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-money style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="total_balance"
+                           step="any" id="total_balance" placeholder="Enter Your Current Month Balance" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="username"><strong>User Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-ui-user style"></span>
+                    <input type="text" class="form-control style" name="username" id="username"
+                           placeholder="Enter Your Username" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="password"><strong>Password</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-ui-password style"></span>
+                    <input type="password" class="form-control style" id="password" placeholder="Enter Your Password"
+                           data-toggle="password" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="confirm_password"><strong>Confirm Password</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-ui-password style"></span>
+                    <input type="password" style="border-right: none" class="form-control style" id="confirm_password"
+                           name="confirm_password" placeholder="Enter Your Password Again" data-toggle="password"
+                           required><span class="input-group-addon bg-light text-dark style"><i id="togglePass"
+                                                                                                class="icofont-eye-blocked"></i></span>
+                </div>
+            </div>
+            <hr class="design">
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrol_price"><strong>Petrol Price</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-price style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrol_price" step=any
+                           id="petrol_price" placeholder="Enter Current Petrol Price" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="diesel_price"><strong>Diesel Price</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-price style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="diesel_price" step=any
+                           id="diesel_price" placeholder="Enter Current Diesel Price" required>
+                </div>
+            </div>
+            <hr class="design">
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrolA"><strong>Petrol Reading A</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-monitor style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrol_readingA"
+                           step=any id="petrolA" placeholder="Enter Current Petrol Reading A" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrolB"><strong>Petrol Reading B</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-monitor style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrol_readingB"
+                           step=any id="petrolB" placeholder="Enter Current Petrol Reading B" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrolA"><strong>Petrol Reading C</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-monitor style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrol_readingC"
+                           step=any id="petrolC" placeholder="Enter Current Petrol Reading C" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrolB"><strong>Petrol Reading D</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-monitor style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrol_readingD"
+                           step=any id="petrolD" placeholder="Enter Current Petrol Reading D" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="dieselA"><strong>Diesel Reading A</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-monitor style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="diesel_readingA"
+                           step=any id="dieselA" placeholder="Enter Current Diesel Reading A" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="dieselB"><strong>Diesel Reading B</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-monitor style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="diesel_readingB"
+                           step=any id="dieselB" placeholder="Enter Current Diesel Reading B" required>
+                </div>
+            </div>
+            <div class="col-md-12 mt-4">
+                <label class="required" for="summary_date"><strong>Select Date Of Summary</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-calendar style"></span>
+                    <input type="date" class="form-control style" name="summary_date" id="summary_date" required>
+                </div>
+            </div>
+            <hr class="design">
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrol_stock"><strong>Current Petrol Stock (litters)</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-energy-oil style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrol_stock" step=any
+                           id="petrol_stock" placeholder="Enter Current Petrol Stock" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="diesel_stock"><strong>Current Diesel Stock (litters)</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-energy-oil style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="diesel_stock" step=any
+                           id="diesel_stock" placeholder="Enter Current Diesel Stock" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="petrolRs"><strong>Supplied Petrol Rs</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-money-bag style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="petrolRs" step=any
+                           id="petrolRs" placeholder="Enter Your Supplied Petrol Rs" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="dieselRs"><strong>Supplied Diesel Rs</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-money-bag style"></span>
+                    <input type="number" onwheel="return false" class="form-control style" name="dieselRs" step=any
+                           id="dieselRs" placeholder="Enter Your Supplied Diesel Rs" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="supplier_name"><strong>Supplier Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-ui-user style"></span>
+                    <input type="text" class="form-control style" name="supplier_name" id="supplier_name"
+                           placeholder="Enter Your Supplier Name" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="mob_no"><strong>Mobile No.</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-phone style"></span>
+                    <input type="text" class="form-control style" data-inputmask="'mask': '0399-99999999'"
+                           name="mob_no" id="mob_no" maxlength="12" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="company_name"><strong>Company Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-industries style"></span>
+                    <input type="text" class="form-control style" name="company_name" id="company_name"
+                           placeholder="Enter Supplier Company Name" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="res_address"><strong>Resident Address</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-ui-email style"></span>
+                    <input type="text" class="form-control style" name="res_address" id="res_address"
+                           placeholder="Enter Your Supplier Resident Address" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="iban"><strong>Bank Account Number</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-credit-card style"></span>
+                    <input type="text" class="form-control style" name="iban" id="iban"
+                           placeholder="Enter Supplier Company Name" required>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4">
+                <label class="required" for="bank_name"><strong>Bank Name</strong></label>
+                <div class="input-group">
+                    <span class="input-group-addon bg-dark text-light icofont-bank style"></span>
+                    <input type="text" class="form-control style" name="bank_name" id="bank_name"
+                           placeholder="Enter Your Supplier Resident Address" required>
+                </div>
+            </div>
+            <div class="col-md-12 mt-4">
+                <input class="form-check-input" type="checkbox" id="licence" required>
+                <label for="licence" class="form-check-label">I have Read Terms And Conditions And Agree With it</label>
+            </div>
+            <div class="text-center mt-lg-5 mb-5">
+                <button type="submit" class="btn btn-success btn-block cardStyling" style="padding: 10px; width: 200px">
+                    Create Account
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="text-center" style="border: 2px solid red;color:yellow;background-color:black;">&copy;
+    <span id="year"></span> All Rights Reserved. Developed By
+    <a href="https://fb.com/fawadkhan546" target="blank" style="color: white">Fawad</a>
+</div>
+</body>
+<div class="modal fade" id="Agreement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="font-family: 'Times New Roman',serif">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Terms And Conditions</h5>
+            </div>
+            <div class="modal-body">
+                <h4>Warmly Welcome To Professional Fuel Station Management System</h4>
+                <p><b>Note: </b>Attention! please Read The Following Instructions Carefully for the best
+                    experience and performance, <br><span class="text-danger">*</span> Read The <b>Dates</b> given on
+                    the top of required page, <br><span class="text-danger">*</span>
+                    And note that this system can supports only three machines for now two Petrols and one Diesel if you
+                    want to add more machines please feel free to contact the Developer at <i
+                            class="icofont-brand-whatsapp"> </i><a
+                            href="https://api.whatsapp.com/send/?phone=03418357982&text=Assalamualaikum%20Fawad%20I%20Am%20Using%20Your%20Software%20PFSMS&app_absent=0"
+                            target="_blank">+923418357982</a>,<br> Thanks for choosing me, and Wish You a best and
+                    Happy experience here and have a great time with me Thank You.<br>Your well wisher <b>Fawad</b>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger cardStyling" href="{% url "Login" %}" role="button">Disagree</a>
+                <button type="submit" class="btn btn-success cardStyling" data-bs-dismiss="modal">Agree</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static '/resources/js/signUp.js' %}"></script>
+<script type="text/javascript" src={% static '/resources/js/password_Check.js' %}></script>
+</html>

@@ -1,0 +1,43 @@
+{% extends 'Base.html' %}
+{% block title %}View Suppliers {% endblock %}
+{% block linkTitle %}Suppliers / View Suppliers {% endblock %}
+{% block body %}
+    <div class="card-block">
+        <div class="form-group row">
+            {% if suppliers %}
+                <div class="text-center col-md-10">
+                    <h4 class="font-weight-bold">List of Registered Suppliers</h4>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>IBAN</th>
+                        <th>Bank</th>
+                        <th>Company Name</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in suppliers %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ i.Name }}</td>
+                            <td>{{ i.Mobile }}</td>
+                            <td>{{ i.IBAN }}</td>
+                            <td>{{ i.Bank_Name }}</td>
+                            <td>{{ i.Company_Name }}</td>
+                            <td>{{ i.Resident_Address }}</td>
+                            <td><a class="btn btn-grd-danger btn-round btn-sm icofont-edit-alt cardStyling"
+                                   href="{% url 'Edit Supplier' i.id %}" role="button"> Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

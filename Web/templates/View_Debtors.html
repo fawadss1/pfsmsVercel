@@ -1,0 +1,45 @@
+{% extends 'Base.html' %}
+{% block title %}View Debtors {% endblock %}
+{% block linkTitle %}Debtors / View Debtors {% endblock %}
+{% block body %}
+    <div class="card-block">
+        <div class="form-group row">
+            {% if debtors %}
+                <div class="text-center col-md-10">
+                    <h4 class="font-weight-bold">List of Registered Debtors</h4>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Address</th>
+                        <th>Day Debt</th>
+                        <th>Day Credit</th>
+                        <th>Current Debt</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i,j in debtors %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ j.Debt_Date |date:"d-m-Y" }}</td>
+                            <td>{{ i.Name }}</td>
+                            <td>{{ i.Mobile }}</td>
+                            <td>{{ i.Resident_Address }}</td>
+                            <td>{{ j.Today_Debt }}</td>
+                            <td>{{ j.Today_Credit }}</td>
+                            <td>{{ j.Current_Total_Debt }}</td>
+                            <td><a class="btn btn-grd-danger btn-round btn-sm icofont-edit-alt cardStyling"
+                                   href="{% url 'Edit Debtor' i.id %}" role="button"> Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

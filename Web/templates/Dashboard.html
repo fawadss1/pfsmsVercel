@@ -1,0 +1,210 @@
+{% extends 'Base.html' %}
+{% load humanize %}
+{% block title %}Dashboard{% endblock %}
+{% block linkTitle %}Dashboard{% endblock %}
+{% block body %}
+    {% for i in boxes %}
+        <div class="card-block pt-0">
+            <div class="row">
+                <div class="col-md-6 col-xl-3">
+                    <div class="card widget-card-1 cardStyling">
+                        <div class="card-block-small">
+                            <i class="icofont-people bg-c-blue card1-icon"></i>
+                            <span class="text-c-blue f-w-600">Total Employees</span>
+                            <hr>
+                            <div class="text-left">
+                                <h6>Registered Employees : <span class="text-danger">{{ employee.count }}</span></h6>
+                                <h6 class="invisible">hidden</h6>
+                            </div>
+                            <div>
+                                <span class="f-left text-muted mt-2 small">
+                                    <i class="text-c-blue icofont-refresh mr-2"></i>Updated On {{ i.Date|date:"d-M-y" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card widget-card-1 cardStyling">
+                        <div class="card-block-small">
+                            <i class="icofont-money bg-c-green card1-icon"></i>
+                            <span class="text-c-green f-w-600">Today Total Rupees</span>
+                            <hr>
+                            <div class="text-left">
+                                <h6>Petrol Rs: <span
+                                        class="text-danger">{{ i.Total_Petrol_Rs|floatformat:2 }}</span></h6>
+                                <h6>Diesel Rs: <span
+                                        class="text-danger">{{ i.Total_Diesel_Rs|floatformat:2 }}</span></h6>
+                            </div>
+                            <div>
+                                <span class="f-left text-muted mt-2 small">
+                                    <i class="text-c-green icofont-refresh mr-2"></i>Updated On {{ i.Date|date:"d-M-y" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card widget-card-1 cardStyling">
+                        <div class="card-block-small">
+                            <i class="icofont-minus-circle bg-c-pink card1-icon"></i>
+                            <span class="text-c-pink f-w-600">Today Total Fuel Sold</span>
+                            <hr>
+                            <div class="text-left ">
+                                <h6>Petrol Sold: <span
+                                        class="text-danger">{{ i.Total_Petrol_Sold|floatformat:2 }}</span> Litters
+                                </h6>
+                                <h6>Diesel Sold: <span
+                                        class="text-danger">{{ i.Total_Diesel_Sold|floatformat:2 }}</span> Litters
+                                </h6>
+                            </div>
+                            <div>
+                                <span class="f-left text-muted mt-2 small">
+                                    <i class="text-c-pink icofont-refresh mr-2"></i>Updated On {{ i.Date|date:"d-M-y" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card widget-card-1 cardStyling">
+                        <div class="card-block-small">
+                            <i class="icofont-plus-circle bg-c-yellow card1-icon"></i>
+                            <span class="text-c-yellow f-w-600">Today Fuel In Stock</span>
+                            <hr>
+                            {% for f in fuelStock %}
+                                <div class="text-left">
+                                    <h6>Petrol In Stock: <span
+                                            class="text-danger">{{ f.Total_Petrol_In_Stock|floatformat:2 }}</span>
+                                        Litters
+                                    </h6>
+                                    <h6>Diesel In Stock: <span
+                                            class="text-danger">{{ f.Total_Diesel_In_Stock|floatformat:2 }}</span>
+                                        Litters
+                                    </h6>
+                                </div>
+                            {% endfor %}
+
+                            <div>
+                                <span class="f-left text-muted mt-2 small">
+                                    <i class="text-c-yellow icofont-refresh mr-2"></i>Updated On {{ i.Date|date:"d-M-y" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card cardStyling">
+                        <div class="card-header">
+                            <h5> Current Month Fuel Sell Statistics</h5>
+                            <div class="card-header-right">
+                                <span class="text-success">Total Petrol Sold : {{ PetrolSoldM|floatformat:2 }} Litters</span>
+                                <span style="color: rgb(148,85,23,0.8)">Total Diesel Sold : {{ DieselSoldM|floatformat:2 }} Litters</span>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <canvas id="Current Month Statistics" height="120px"></canvas>
+                            <small class="icofont-refresh"> Updated On {{ i.Date|date:"d-M-Y" }} {{ i.Time }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card cardStyling">
+                        <div class="card-header">
+                            <h5>Current Month Rs Statistics</h5>
+                            <div class="card-header-right">
+                                <span class="text-success">Total Petrol Rs : {{ PetrolRsM|floatformat:2|intcomma }}</span>
+                                <span style="color: rgb(217,101,9)">Total Diesel Rs : {{ DieselRsM|floatformat:2|intcomma }}</span>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <canvas id="Current Month Rs Statistics" height="120px"></canvas>
+                            <small class="icofont-refresh"> Updated On {{ i.Date|date:"d-M-Y" }} {{ i.Time }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <script>
+        var ctx = document.getElementById('Current Month Statistics');
+        var monthStatistics = new Chart(ctx, {
+            data: {
+                datasets: [{
+                    type: 'bar',
+                    label: 'Petrol Sold Ltrs',
+                    data: [{% for i in currentMonth %}{{ i.Total_Petrol_Sold }}, {% endfor %}],
+                    backgroundColor: 'rgba(128,255,64,0.5)',
+                    borderColor: 'rgb(59,122,27)',
+                    borderRadius: 10,
+                    borderWidth: 1
+                }, {
+                    type: 'bar',
+                    label: 'Diesel Sold Ltrs',
+                    data: [{% for i in currentMonth %}{{ i.Total_Diesel_Sold }}, {% endfor %}],
+                    backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    borderColor: 'rgb(148,85,23)',
+                    borderRadius: 10,
+                    borderWidth: 1,
+                }],
+                labels: [{% for i in currentMonth %}'{{ i.Date|date:"d-M" }}',{% endfor %}],
+            },
+        });
+    </script>
+    <!-- <script>
+        var ctx = document.getElementById('Current Year Statistics');
+        var yearStatistics = new Chart(ctx, {
+            data: {
+                datasets: [{
+                    type: 'line',
+                    label: 'Petrol Sold Ltrs',
+{#                    data: [{{ PetrolSoldY }},],#}
+                    borderColor: ['rgb(59,122,27)'],
+                }, {
+                    type: 'line',
+                    label: 'Diesel Sold Ltrs',
+{#                    data: [{{ DieselSoldY }},],#}
+                    borderColor: ['rgb(148,85,23)'],
+                }],
+{#                labels: [{% for i in currentYear %}'{{ i.Date|date:"M-Y" }}',{% endfor %}],#}
+            },
+        });
+    </script>
+    -->
+    <script>
+        var ctx = document.getElementById('Current Month Rs Statistics');
+        var yearStatistics = new Chart(ctx, {
+            data: {
+                datasets: [{
+                    type: 'line',
+                    label: 'Petrol Rs',
+                    data: [{% for i in currentMonth %}{{ i.Total_Petrol_Rs }}, {% endfor %}],
+                    borderColor: 'rgb(83,218,16)',
+                    backgroundColor: 'rgb(83,218,16)',
+                    borderDash: [5, 2],
+                    fill: false,
+                    tension: 0.3,
+                    pointStyle: 'circle',
+                    pointRadius: 4,
+                    pointBorderColor: 'rgb(0, 0, 0)'
+                }, {
+                    type: 'line',
+                    label: 'Diesel Rs',
+                    data: [{% for i in currentMonth %}{{ i.Total_Diesel_Rs }}, {% endfor %}],
+                    borderColor: 'rgb(217,101,9)',
+                    backgroundColor: 'rgb(217,101,9)',
+                    borderDash: [5, 2],
+                    fill: false,
+                    tension: 0.3,
+                    pointStyle: 'circle',
+                    pointRadius: 4,
+                    pointBorderColor: 'rgb(0, 0, 0)'
+                }],
+                labels: [{% for i in currentMonth %}'{{ i.Date|date:"d-M" }}',{% endfor %}],
+            },
+        });
+    </script>
+    {#    <div class="mb-2">#}
+    {#        <script defer src="//api.find-ip.net/widget.js?width=260&paid=1&amp;border=black&amp;"></script>#}
+    {#    </div>#}
+{% endblock %}

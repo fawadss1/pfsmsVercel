@@ -1,0 +1,43 @@
+{% extends 'Base.html' %}
+{% block title %}Security Cameras{% endblock %}
+{% block linkTitle %}Security Cameras {% endblock %}
+{% block body %}
+    <h5 class="mt-5 ml-5 text-danger font-weight-bold">Sorry! This Page is Under Development</h5>
+    <p class="mt-5 ml-5 text-danger font-weight-bold">Will Be Updated Soon!</p>
+    <button class="btn btn-round btn-success" data-toggle="modal" data-target="#ipAddModel">Add DVR/NVR</button>
+    <div class="modal fade" id="ipAddModel" data-backdrop="static" data-keyboard="true" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Enter Your DVR/NVR IP Address</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" method="POST" action="" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <div class="col-md-10">
+                                <label class="required" for="ipAdd"><strong>IP Address</strong></label>
+                                <div class="input-group">
+                                    <span class="input-group-addon bg-dark icofont-database-add style"></span>
+                                    <input type="text" class="form-control style" id="ipAdd" name="ipAddress"
+                                           data-inputmask="'mask': '999.999.99.9'" placeholder="192.168.1.6" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success btn-round icofont-check-circled"> Add
+                                </button>
+                                <button class="btn btn-danger btn-round icofont-close-circled" data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(":input").inputmask();
+    </script>
+{% endblock body %}

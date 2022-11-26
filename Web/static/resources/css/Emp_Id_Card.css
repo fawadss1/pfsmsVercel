@@ -1,0 +1,82 @@
+.Styling {
+    padding: 12px;
+    border: 2px solid #be85f2;
+    border-radius: 10px;
+}
+
+.Styling:focus {
+    border: 2px solid #be85f2;
+    box-shadow: 0 0 20px rgba(255, 100, 255, 0.5);
+}
+
+@media screen {
+    div.footer {
+        display: none;
+    }
+}
+
+@media print {
+    div.footer {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+@media screen {
+    div.header {
+        display: none;
+    }
+}
+
+@media print {
+    div.header {
+        position: fixed;
+        top: 0;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+.container {
+    position: absolute;
+    left: 25%;
+    top: 20%;
+}
+
+.card {
+    height: 4.375in;
+    width: 3.275in;
+    padding: 1.3rem 0 1.3rem 0;
+    box-shadow: 0 0 50px #b4b4b4;
+    background-image: url("/static/resources/images/bgecard.jpg");
+    background-repeat: no-repeat;
+    background-size: 313px 418px;
+    border-radius: 20px;
+}
+
+.profile-img {
+    position: absolute;
+    top: 30%;
+    left: 36%;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid rgba(231, 19, 196, 0.83);
+}
+
+.names {
+    position: absolute;
+    top: 65%;
+    left: 20%;
+}
+
+.copyright {
+    position: absolute;
+    top: 92%;
+    margin-top: .6rem;
+    color: yellow;
+}

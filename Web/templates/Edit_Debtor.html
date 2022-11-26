@@ -1,0 +1,247 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block title %}Edit Debtor {% endblock %}
+{% block linkTitle %}Debtors / View Debtors / Edit Debtor {% endblock %}
+{% block backButton %}
+    <a class="cardStyling" role="button" onclick="goBack()" href="#"><img src="{% static 'resources/images/back.png' %}"
+                                                                          alt="Back" width="60"
+                                                                          height="30"></a> {% endblock %}
+{% block body %}
+    {% for i,j in DebtorDetails %}
+        <form class="needs-validation" method="POST" action="" id="update" novalidate>
+            {% csrf_token %}
+            <p class="text-center col-md-10"><b>Debt Record of Date : {{ j.Debt_Date|date:"d /F /Y" }}</b></p>
+            <div class="card-block">
+                <div class="form-group row">
+                    <div class="col-md-5">
+                        <label class="required" for="debtor_name"><strong>Debtor Name</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-user style"></span>
+                            <input type="text" class="form-control style" name="debtor_name" id="debtor_name"
+                                   value="{{ i.Name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="father_name"><strong>Father Name</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-business-man style"></span>
+                            <input type="text" class="form-control style" name="father_name" id="father_name"
+                                   value="{{ i.Father_Name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="mob_no"><strong>Mobile Number</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-phone style"></span>
+                            <input type="text" class="form-control style" name="mob_no" id="mob_no"
+                                   value="{{ i.Mobile }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="required" for="cnic"><strong>CNIC Number</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-credit-card style"></span>
+                            <input type="text" class="form-control style" name="cnic" id="cnic" value="{{ i.CNIC }}"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <label class="required" for="res_address"><strong>Resident Address</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-ui-email style"></span>
+                            <input type="text" class="form-control style" name="res_address" id="res_address"
+                                   value="{{ i.Resident_Address }}" required>
+                        </div>
+                        <div class="mt-3"><small><b>Note: </b>if You Want to Update Following Values </small><a
+                                href="{% url "Add Summary" %}#Debtors"><small class="text-primary"><u>Click
+                            Here</u></small></a>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mt-1">
+                        <label for="today_credit"><strong>Day Credit</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-plus-circle style"></span>
+                            <input type="number" class="form-control style" name="today_credit" id="today_credit"
+                                   value="{{ j.Today_Credit }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mt-1">
+                        <label for="today_debit"><strong>Day Debt</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-minus-circle style"></span>
+                            <input type="number" class="form-control style" name="today_debit" id="today_debit"
+                                   value="{{ j.Today_Debt }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <label for="total_debt"><strong>Total Current Debt</strong></label>
+                        <div class="input-group">
+                            <span class="input-group-addon bg-dark icofont-minus-circle style"></span>
+                            <input type="number" class="form-control style" name="total_debt" id="total_debt"
+                                   value="{{ j.Current_Total_Debt }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-3 mt-5 mb-5 ml-5">
+                        <button type="submit" name="Updated"
+                                class="btn btn-round btn-success icofont-refresh cardStyling">
+                            Update Record
+                        </button>
+                    </div>
+                    <div class="col-3 mt-5 mb-5">
+                        <button type="button" class="btn btn-round btn-danger icofont-trash cardStyling"
+                                data-toggle="modal"
+                                data-target="#deleted"> Delete Record
+                        </button>
+                    </div>
+                    <div class="col-3 mt-5 mb-5">
+                        <button type="button" class="btn btn-round btn-warning icofont-law-document cardStyling"
+                                data-toggle="modal"
+                                data-target="#details"> Debt Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form method="POST" action="" id="delete">
+            {% csrf_token %}
+            <div class="modal fade" id="deleted" data-backdrop="static" data-keyboard="true" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" role="dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Do You Want To Delete ?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Debtor Name : <b>{{ i.Name }}</b><br>
+                            Total Debt Current : <b>{{ j.Current_Total_Debt }}</b><br>
+                            Total Dues Records : <b>{{ debtorCount }}</b><br>
+                            Date of Entry : <b>{{ debtorEntryDate }}</b><br>
+                            <p class="mt-2">All The Dues Records Will Be Deleted</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success btn-round icofont-refresh cardStyling"
+                                    data-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" name="Deleted"
+                                    class="btn btn-danger btn-round icofont-trash cardStyling">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <style>
+
+            @media screen {
+                div.header {
+                    display: none;
+                }
+            }
+
+            @media print {
+                div.header {
+                    position: fixed;
+                    top: 0;
+                }
+            }
+
+            @media screen {
+                div.seal {
+                    display: none;
+                }
+            }
+
+            @media print {
+                div.seal {
+                    position: fixed;
+                    bottom: 0;
+                }
+            }
+
+            @media screen {
+                div.footer {
+                    display: none;
+                }
+            }
+
+            @media print {
+                div.footer {
+                    position: fixed;
+                    bottom: 0;
+                }
+            }
+        </style>
+        <div class="modal fade" id="details" data-backdrop="static" data-keyboard="true" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="printReport">
+                        <img src="{% static 'resources/images/pakistan-flag.jpg' %}"
+                             style="position: absolute;width: 100%;height: 99%;opacity: 0.1;" alt="Model_bg">
+                        <div class="header">
+                            <img style="width: 100%" src="{% static 'resources/images/Header.png' %}" alt="Header">
+                            <p class="text-dark float-left ml-3 mt-1"><b>Date: <span class="JDate"></span></b></p>
+                            <p class="text-dark float-right mr-3 mt-1"><b>Time: <span class="JTime"></span></b></p>
+                        </div>
+                        <h5 class="modal-title text-center mb-3 mt-1">Dues Details of <b>{{ i.Name }}</b></h5>
+                        <hr>
+                        <p class="ml-3">Total Records: {{ debtorCount }}</p>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Credit</th>
+                                <th class="text-center">Debt</th>
+                                <th class="text-center">Total Current Debt</th>
+                                <th class="text-center">Day Sale Man</th>
+                                <th class="text-center">Night Sale Man</th>
+                            </tr>
+                            </thead>
+                            {% for k,j in debtorDuesDetails %}
+                                {% if k.Today_Credit > 0 or k.Today_Debt > 0 %}
+                                    <tbody>
+                                    <tr>
+                                        <th>{{ forloop.counter }}</th>
+                                        <td class="text-center">{{ k.Debt_Date|date:"d/M/Y" }}</td>
+                                        <td class="text-center">{{ k.Today_Credit }}</td>
+                                        <td class="text-center">{{ k.Today_Debt }}</td>
+                                        <td class="text-center">{{ k.Current_Total_Debt }}</td>
+                                        <td class="text-center">{{ j.Today_Sale_Man }}</td>
+                                        <td class="text-center">{{ j.Tonight_Sale_Man }}</td>
+                                    </tr>
+                                    </tbody>
+                                {% endif %}
+                            {% endfor %}
+                        </table>
+                        <div class="seal">
+                            <p class="text-right mb-5 fixed-bottom"><b>Manager Seal/Signature:_________________</b></p>
+                        </div>
+                        <div class="footer text-center text-warning"
+                             style="border: 2px solid red; background-color:black;"> &copy; <span class="JYear"></span>
+                            All Rights Reserved. Developed By Fawad <span
+                                    class="icofont-brand-whatsapp"> +923418357982</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-danger btn-sm btn-round icofont-close-circled cardStyling"
+                                data-dismiss="modal"> Cancel
+                        </button>
+                        <button class="btn btn-outline-success btn-sm btn-round icofont-printer cardStyling"
+                                onclick="printSlip('printReport')"> Print Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <script>
+        function printSlip(area) {
+            document.body.innerHTML = document.getElementById(area).innerHTML;
+            window.print();
+            location.reload();
+        }
+    </script>
+{% endblock body %}

@@ -1,0 +1,131 @@
+{% extends 'Base.html' %}
+{% block title %}View Summaries{% endblock %}
+{% block linkTitle %}Summaries / View Summaries{% endblock %}
+{% block body %}
+    <style>
+        .form-control {
+            border-radius: 40px !important;
+        }
+    </style>
+    <div class="row justify-content-md-center" id="messageAlert">
+        <div class="col-md-6">
+            <p class="text-center alert alert-danger" role="alert">
+                <b id="errorMessage"></b>
+            </p>
+        </div>
+    </div>
+    <div class="card-block mb-3">
+        <form class="needs-validation" method="POST" action="" novalidate>
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label class="ml-3 required" for="Month"><strong>Month</strong></label>
+                    <select class="form-control style p-10" style="height: 53px;" id="Month" name="month" required>
+                        <option value="">Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="ml-3 required" for="Year"><strong>Year</strong></label>
+                    <select class="form-control style p-10" style="height: 53px;" id="Year" name="year" required>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="required"><strong> <span class="text-danger">OR | </span>Select Date</strong></label>
+                    <input class="form-control style" type="date" id="date" min="{{ fDate|date:'Y-m-d'|add:'1' }}"
+                           max="{{ lDate|date:'Y-m-d' }}" name="date">
+                </div>
+                <div class="col-md-3">
+                    <label class="ml-3 invisible">search</label>
+                    <button type="button" id="search" style="padding: 10px; height: 53px;"
+                            class="btn btn-success btn-round btn-block style cardStyling icofont-search-2"> Search
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="pt-3">
+            <table class="table table-hover">
+                <thead id="thead">
+                <tr>
+                    <th>S.No</th>
+                    <th>Date</th>
+                    <th>Petrol Price</th>
+                    <th>Diesel Price</th>
+                    <th>Petrol Sold</th>
+                    <th>Diesel Sold</th>
+                    <th>Day Sale Man</th>
+                    <th>Night Sale Man</th>
+                    <th>View Detail</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            const d = new Date();
+            const month = d.getMonth() + 1;
+            const year = d.getFullYear();
+            $("#Month").val(month);
+            $("#Year").val(year);
+            $('#thead').hide();
+            $('#messageAlert').hide();
+        });
+
+        $('#search').click(function () {
+            const month = $('#Month').val();
+            const year = $('#Year').val();
+            const date = $('#date').val();
+            const csrf = $('[name=csrfmiddlewaretoken]').val();
+            const data = {'month': month, 'year': year, 'date': date, 'csrfmiddlewaretoken': csrf}
+            $.ajax({
+                method: "POST",
+                url: "{% url 'View Summaries' %}",
+                data: data,
+                success: function (response) {
+                    if (response.data) {
+                        $('#thead').show()
+                        $('#messageAlert').hide()
+                        let Data = response.data;
+                        let result = "";
+                        for (let i = 0; i <= Data.length; i++) {
+                            let sNo = i + 1;
+                            result += "<tr><th>" + sNo + "</th><td>" + Data[i].Date +
+                                "</td><td>" + Data[i].Petrol_Price + "</td><td>" + Data[i].Diesel_Price +
+                                "</td><td>" + Data[i].Total_Petrol_Sold + "</td><td>" +
+                                Data[i].Total_Diesel_Sold + "</td><td>" + Data[i].Today_Sale_Man +
+                                "</td><td>" + Data[i].Tonight_Sale_Man + "</td><td><a class='btn " +
+                                "btn-outline-danger btn-sm btn-round icofont-listine-dots cardStyling'" +
+                                "href='View-Summaries/Print-Summ/D" + Data[i].Date + "&-SNo" + Data[i].id +
+                                "' role='button'> ViewDetails</a></td></tr>";
+                            $("#tbody").html(result);
+                        }
+                    } else {
+                        $('#thead').hide()
+                        $("#tbody").html("")
+                        $('#messageAlert').show()
+                        $("#errorMessage").text(response.error)
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
