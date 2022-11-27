@@ -5,7 +5,7 @@
       "src": "pfsmsVercel/wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "100mb",
+        "maxLambdaSize": "3008mb",
         "runtime": "python3.9"
       }
     },
